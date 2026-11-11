@@ -267,6 +267,17 @@ h1{font-size:clamp(20px,7vw,30px);letter-spacing:2px;overflow-wrap:anywhere}
 #tabs .bg{position:absolute;top:-9px;right:-1px;background:var(--r);color:#f6eed7;font:10px/1 var(--pf);border-radius:9px;padding:2px 5px;box-shadow:1px 1px 0 #0004}
 .cg .it{flex-wrap:wrap;align-items:center}.cg .qr{flex:0 0 auto}.cg .qr button{min-height:40px;padding:8px 10px}
 .ok{color:#2f5d2a}.zlog{font-size:15px;color:var(--m)}
+
+/* ===== IDIOMAS + NOCTURNO ===== */
+.lgr{display:flex;gap:4px;margin:8px 0 2px}.lgr button{flex:1;padding:6px 2px;font:12px var(--pf);min-height:34px}.lgr button.on{background:var(--g);color:#f6eed7}
+body.night{--paper:#1c1a15;--ink:#e8e0c8;--m:#a39b86;--r:#e5604f;color-scheme:dark;background:radial-gradient(60% 40% at 92% 6%,#8a2b1a30,#0000 70%),linear-gradient(#15130f,#0c0b08)}
+body.night[data-sc]{--a:#d9b25a}body.night[data-sc=A]{--g:#e0594e}body.night[data-sc=N]{--g:#5b9fd0}body.night[data-sc=X]{--g:#7fb465}body.night[data-sc=Z]{--g:#c97aa0}
+body.night .tick,body.night .slot,body.night .big,body.night .k,body.night .ecg,body.night .pc,body.night .tp,body.night input,body.night select,body.night button,body.night .use{background:#2a261c}
+body.night .use.on{background:var(--g)}body.night #tabs button{background:#24211a}body.night #tabs button.on{background:var(--paper)}
+body.night .bar{background:#2f2b20}body.night .sgb u{background:#38331f}
+body.night .pk{background-color:#16140f;background-image:linear-gradient(90deg,#ffffff1c 1px,transparent 1px),linear-gradient(#ffffff1c 1px,transparent 1px)}
+body.night .pop,body.night .sh{background:#1c1a15f7}body.night .ok{color:#7fc472}body.night .hd:before{color:var(--r)}
+body.night .slot svg{filter:grayscale(1) brightness(.6);opacity:.4}body.night .slot.on svg,body.night .slot.pt svg,body.night .big.on svg{filter:none;opacity:1}
 </style></head><body><noscript>Esta aplicación necesita JavaScript.</noscript>
 <header class="hd"><div class="emb" id="emb"></div><div><h1>MI REFUGIO</h1><div class="sb">Archivo de campo · Cómo sobrevivir a los muertos vivientes</div></div><button id="gd" class="gb" aria-label="Manual">📘</button></header>
 <div class="tick" id="tk"></div>
@@ -446,7 +457,7 @@ if(d.tg){const k=d.tg,bo=/^b\d+$/.test(k);let on;if(bo){const i=k.slice(1);S.bk[
 const _r=render;render=function(){_r();hud()};$("emb").innerHTML=ic("botiquín");
 render();
 (()=>{
-SP.bottle="...kk.../...kk.../..kggk../..kbbk../.kbbbbk./.kbwbbk./.kbwbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./..kkkk..";SP.medkit="kkkkkkkk/kwwrrwwk/kwwrrwwk/krrrrrrk/krrrrrrk/kwwrrwwk/kwwrrwwk/kkkkkkkk";SP.bandage="..kkkk../.kwwwwk./kwwkkwwk/kwkwwkwk/kwkwwkwk/kwwkkwwk/.kwwwwk./..kkkk..";SP.knife="......kk/.....kgk/....kgk./...kgk../..kgk.../.knnk.../knnk..../kkk.....";SP.gas="..kkkk../.kggggk./kgwwwwgk/kgwkkwgk/kgwwwwgk/.kgkkgk./..kggk../...kk...";SP.saline="..kkkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./..kbbk../...kk.../...kg...";
+SP.bottle="...kk.../...kk.../..kggk../..kbbk../.kbbbbk./.kbwbbk./.kbwbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./.kbbbbk./..kkkk..";SP.medkit="kkkkkkkk/kwwrrwwk/kwwrrwwk/krrrrrrk/krrrrrrk/kwwrrwwk/kwwrrwwk/kkkkkkkk";SP.bandage="..kkkk../.kwwwwk./kwwkkwwk/kwkwwkwk/kwkwwkwk/kwwkkwwk/.kwwwwk./..kkkk..";SP.knife="......kk/.....kgk/....kgk./...kgk../..kgk.../.knnk.../knnk..../kkk.....";SP.gas="..kkkk../.kggggk./kgwwwwgk/kgwkkwgk/kgwwwwgk/.kgkkgk./..kggk../...kk...";SP.saline="..kkkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./..kbbk../...kk.../...kg...";
 IM.unshift([/botella/,"bottle"],[/mascarilla/,"gas"],[/botiqu|termóm/,"medkit"],[/gasas|vendas|tiritas|esparadrapo|quemad/,"bandage"],[/multiher|tijeras|pinzas|herram/,"knife"],[/suero|rehidrat/,"saline"]);
 Object.assign(PAL,{k:"#0d0e0a",w:"#cfc8b0",g:"#7c8077",b:"#5f7f8f",r:"#8f2f26",y:"#b9a24a",n:"#6b5333",G:"#5e7a45"});
 SP.water="..kkk.../..kgk.../.kkbkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./..kkkk..";
@@ -455,9 +466,9 @@ const C=5,SZ={water:[2,2],food:[2,2],flash:[1,1],bat:[1,1],radio:[1,2],med:[2,1]
 S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};
 const P=()=>S.pk,R=()=>P().L/10;
 const ik=n=>{const t=n.toLowerCase();return(IM.find(m=>m[0].test(t))||[0,"box"])[1]};
-const KS={food:{per:4,min:2},mask:{per:8,min:1},cash:{per:300,min:1},pills:{per:10,min:1},med:{per:7,min:2},paw:{per:2,min:2},bat:{per:2,min:1},fire:{per:4,min:1},blanket:{u:2}};
+const KS={food:{per:4,min:2},mask:{fix:1},gas:{fix:1},cash:{per:300,min:1},pills:{per:10,min:1},med:{per:7,min:2},paw:{per:2,min:2},bat:{per:2,min:1},fire:{per:4,min:1},blanket:{u:2}};
 function shape(A,b){const Rm=R();A=Math.max(1,Math.min(A,C*Rm));if(A==b[0]*b[1]&&b[1]<=Rm)return b;let best=null;for(let w=1;w<=C;w++){const h=Math.ceil(A/w);if(h>Rm)continue;const sc=(w*h-A)*2+Math.abs(w-h)+(w>h?.1:0);if(!best||sc<best[0])best=[sc,[w,h]]}return best?best[1]:[C,Rm]}
-function dm(x){const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=[1,2];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
+function dm(x){const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=R()>=3?[1,3]:[3,1];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.fix?c.fix:c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
 function fits(k,px,py,L){const x=L.find(i=>i.key==k),[w,h]=dm(x);if(px<0||py<0||px+w>C||py+h>R())return 0;
 return L.every(o=>{const q=P().pl[o.key];if(o.key==k||!q)return 1;const [a,b]=dm(o);return px+w<=q.x||q.x+a<=px||py+h<=q.y||q.y+b<=py})}
 const _g=grid;
@@ -700,5 +711,134 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-zc],[data-
  if(d.zgb!==undefined){S.bk[d.zgb]=true;bp(880);render()}});
 const _r7=render;render=function(){_r7();if(S.tab=="f")desp();if(S.tab=="g")conseguir();const t=pend().t,b=document.querySelector('#tabs [data-t="g"]');if(b&&t)b.insertAdjacentHTML("beforeend",'<span class="bg">'+t+"</span>")};
 render();
+})();
+
+(()=>{
+const LG=[["es","ES"],["en","EN"],["ca","CA"],["de","DE"],["zh","中文"],["ja","日本語"],["ru","RU"]];
+const D=new Map(`Supervivientes|Survivors|Supervivents|Überlebende|幸存者|生存者|Выжившие
+Mascotas|Pets|Mascotes|Haustiere|宠物|ペット|Питомцы
+Resistencia|Endurance|Resistència|Ausdauer|坚持时长|持久期間|Выживание
+Plan|Plan|Pla|Plan|方案|プラン|План
+días|days|dies|Tage|天|日|дней
+Atrincherado|Barricaded|Atrinxerat|Verschanzt|据守|籠城|Оборона
+En fuga|On the run|En fugida|Auf der Flucht|逃亡|逃走中|В бегах
+Refugio remoto|Remote shelter|Refugi remot|Abgelegener Unterschlupf|偏远避难所|辺境の避難所|Дальнее укрытие
+Fortaleza|Fortress|Fortalesa|Festung|堡垒|要塞|Крепость
+Todo|All|Tot|Alles|全部|すべて|Всё
+Almacén|Stock|Magatzem|Lager|储备|備蓄|Склад
+Inventario|Inventory|Inventari|Inventar|库存|在庫|Инвентарь
+Mochila|Backpack|Motxilla|Rucksack|背包|リュック|Рюкзак
+Botiquín|First aid|Farmaciola|Erste Hilfe|急救包|救急箱|Аптечка
+Despensa|Pantry|Rebost|Vorrat|食品柜|食料庫|Кладовая
+A conseguir|To get|Per aconseguir|Zu besorgen|待获取|入手待ち|Достать
+Ficha|Profile|Fitxa|Profil|档案|プロフィール|Досье
+Infectado|Infected|Infectat|Infiziert|已感染|感染|Заражён
+En riesgo|At risk|En risc|Gefährdet|危险|危険|В опасности
+A salvo|Safe|Salvat|In Sicherheit|安全|安全|В безопасности
+Archivo de campo|Field file|Arxiu de camp|Feldakte|野外档案|フィールド記録|Полевое досье
+Cómo sobrevivir a los muertos vivientes|How to survive the living dead|Com sobreviure als morts vivents|Wie man die Untoten überlebt|如何在行尸中生存|ゾンビから生き延びる方法|Как пережить живых мертвецов
+Arrastra ↓|Drag ↓|Arrossega ↓|Ziehen ↓|拖动 ↓|ドラッグ ↓|Тяни ↓
+Por meter|To pack|Per posar|Zu packen|待装入|未収納|Не уложено
+Auto-ordenar|Auto-sort|Auto-ordena|Autom. sortieren|自动整理|自動整理|Авто-укладка
+Vaciar|Empty|Buida|Leeren|清空|空にする|Очистить
+Rotar|Rotate|Gira|Drehen|旋转|回転|Повернуть
+Sacar|Remove|Treu|Entfernen|取出|取り出す|Достать
+Ocupa|Takes|Ocupa|Belegt|占用|占有|Занимает
+slots|slots|slots|Felder|格|マス|ячеек
+Llevas|You carry|Portes|Du trägst|携带|所持|Берёшь
+Necesitas|You need|Necessites|Du brauchst|需要|必要|Нужно
+En mochila|In pack|A la motxilla|Im Rucksack|已装包|収納済み|В рюкзаке
+Parcial|Partial|Parcial|Teilweise|部分|一部|Частично
+Completo|Complete|Complet|Komplett|完整|完了|Полностью
+Falta|Missing|Falta|Fehlt|缺少|不足|Нет
+Equipado|Equipped|Equipat|Ausgerüstet|已装备|装備済み|Есть
+Lo tengo|I have it|Ja ho tinc|Hab ich|已有|持っている|Есть у меня
+Ir al inventario|Go to inventory|Ves a l'inventari|Zum Inventar|前往库存|在庫へ|К инвентарю
+Añadir|Add|Afegeix|Hinzufügen|添加|追加|Добавить
+Cerrar|Close|Tanca|Schließen|关闭|閉じる|Закрыть
+Consejo|Tip|Consell|Tipp|提示|ヒント|Совет
+Otro consejo|Another tip|Un altre consell|Anderer Tipp|换一条|別のヒント|Другой совет
+Briefing|Briefing|Informe|Briefing|简报|ブリーフィング|Брифинг
+Objetivo|Objective|Objectiu|Ziel|目标|目標|Цель
+Misión cumplida|Mission complete|Missió complerta|Mission erfüllt|任务完成|ミッション達成|Миссия выполнена
+Rango|Rank|Rang|Rang|等级|ランク|Ранг
+Caduca|Expires|Caduca|Läuft ab|到期|期限|Срок`.split("\n").map(l=>{const a=l.split("|");return[a[0].toLowerCase(),a.slice(1)]}));
+`Agua potable|Drinking water|Aigua potable|Trinkwasser|饮用水|飲料水|Питьевая вода
+Comida enlatada o que no necesita cocinar|Canned or no-cook food|Menjar en conserva o que no cal cuinar|Konserven oder Essen ohne Kochen|罐头或免煮食品|缶詰や調理不要の食料|Консервы и еда без готовки
+Pastillas potabilizadoras|Water purification tablets|Pastilles potabilitzadores|Wasserreinigungstabletten|净水片|浄水タブレット|Таблетки для очистки воды
+Filtro de agua portátil|Portable water filter|Filtre d'aigua portàtil|Tragbarer Wasserfilter|便携净水器|携帯浄水フィルター|Портативный фильтр для воды
+Machete o hacha de campo|Machete or field axe|Matxet o destral de camp|Machete oder Feldaxt|砍刀或野战斧|ナタまたは野営用斧|Мачете или полевой топор
+Palanca (pie de cabra)|Crowbar|Palanca (peu de cabra)|Brecheisen|撬棍|バール|Лом
+Cuchillo de monte|Hunting knife|Ganivet de muntanya|Jagdmesser|野外刀|ハンティングナイフ|Охотничий нож
+Ropa gruesa de manga larga|Thick long-sleeve clothing|Roba gruixuda de màniga llarga|Dicke langärmlige Kleidung|厚长袖衣物|厚手の長袖服|Плотная одежда с длинным рукавом
+Guantes de trabajo|Work gloves|Guants de feina|Arbeitshandschuhe|工作手套|作業用手袋|Рабочие перчатки
+Botas robustas|Sturdy boots|Botes robustes|Robuste Stiefel|结实的靴子|丈夫なブーツ|Прочные ботинки
+Gafas de protección|Safety glasses|Ulleres de protecció|Schutzbrille|护目镜|保護メガネ|Защитные очки
+Mascarillas FFP2|FFP2 masks|Mascaretes FFP2|FFP2-Masken|FFP2口罩|FFP2マスク|Маски FFP2
+Mascarillas|Masks|Mascaretes|Masken|口罩|マスク|Маски
+Linterna o frontal|Flashlight or headlamp|Llanterna o frontal|Taschen- oder Stirnlampe|手电筒或头灯|懐中電灯またはヘッドライト|Фонарь или налобный фонарь
+Pilas de repuesto|Spare batteries|Piles de recanvi|Ersatzbatterien|备用电池|予備の電池|Запасные батарейки
+Radio de pilas o manivela|Battery or crank radio|Ràdio de piles o maneta|Batterie- oder Kurbelradio|电池或手摇收音机|電池式または手回しラジオ|Радио на батарейках или с ручкой
+Walkie-talkies|Walkie-talkies|Walkie-talkies|Walkie-Talkies|对讲机|トランシーバー|Рации
+Prismáticos|Binoculars|Prismàtics|Fernglas|望远镜|双眼鏡|Бинокль
+Mapa de papel y brújula|Paper map and compass|Mapa de paper i brúixola|Papierkarte und Kompass|纸质地图和指南针|紙の地図とコンパス|Бумажная карта и компас
+Medicación habitual|Regular medication|Medicació habitual|Regelmäßige Medikamente|常用药|常用薬|Постоянные лекарства
+Manta o saco de dormir|Blanket or sleeping bag|Manta o sac de dormir|Decke oder Schlafsack|毯子或睡袋|毛布または寝袋|Одеяло или спальник
+Tienda de campaña|Tent|Tenda de campanya|Zelt|帐篷|テント|Палатка
+Mechero y cerillas|Lighter and matches|Encenedor i llumins|Feuerzeug und Streichhölzer|打火机和火柴|ライターとマッチ|Зажигалка и спички
+Cinta americana|Duct tape|Cinta americana|Panzerband|强力胶带|ガムテープ|Скотч
+Cuerda resistente|Strong rope|Corda resistent|Starkes Seil|结实的绳子|丈夫なロープ|Прочная верёвка
+Tablones, clavos y martillo|Planks, nails and hammer|Taulons, claus i martell|Bretter, Nägel und Hammer|木板、钉子和锤子|板・釘・ハンマー|Доски, гвозди и молоток
+Cadena y candados|Chain and padlocks|Cadena i cadenats|Kette und Vorhängeschlösser|锁链和挂锁|チェーンと南京錠|Цепь и замки
+Bolsas de basura|Trash bags|Bosses d'escombraries|Müllbeutel|垃圾袋|ゴミ袋|Мусорные мешки
+Hornillo y cartuchos de gas|Stove and gas cartridges|Fogonet i cartutxos de gas|Kocher und Gaskartuschen|炉具和燃气罐|コンロとガスカートリッジ|Горелка и газовые баллоны
+Objetos de trueque (pilas, sal, medicinas)|Barter goods (batteries, salt, medicine)|Objectes de trispol (piles, sal, medicines)|Tauschwaren (Batterien, Salz, Medizin)|易货物品（电池、盐、药品）|物々交換品（電池・塩・薬）|Предметы для обмена (батарейки, соль, лекарства)
+Documentos y copias|Documents and copies|Documents i còpies|Dokumente und Kopien|文件和复印件|書類とコピー|Документы и копии
+Plan de grupo (punto de encuentro y señales)|Group plan (meeting point and signals)|Pla de grup (punt de trobada i senyals)|Gruppenplan (Treffpunkt und Signale)|团队计划（集合点和信号）|グループ計画（集合場所と合図）|План группы (место встречи и сигналы)
+Silbato|Whistle|Xiulet|Pfeife|哨子|笛|Свисток
+Libro de supervivencia|Survival book|Llibre de supervivència|Überlebensbuch|生存手册|サバイバル本|Книга по выживанию
+Comida y agua para mascotas|Pet food and water|Menjar i aigua per a mascotes|Futter und Wasser für Haustiere|宠物食物和水|ペットの食料と水|Еда и вода для питомцев
+Generador y combustible|Generator and fuel|Generador i combustible|Generator und Treibstoff|发电机和燃料|発電機と燃料|Генератор и топливо
+Semillas y herramientas de huerto|Seeds and garden tools|Llavors i eines d'hort|Saatgut und Gartenwerkzeug|种子和园艺工具|種と菜園道具|Семена и садовые инструменты
+Depósito de agua de lluvia|Rainwater tank|Dipòsit d'aigua de pluja|Regenwassertank|雨水箱|雨水タンク|Бак для дождевой воды
+Sedal y anzuelos|Fishing line and hooks|Fil de pescar i ham|Angelschnur und Haken|鱼线和鱼钩|釣り糸と針|Леска и крючки
+Botella de agua (1,5 L)|Water bottle (1.5 L)|Ampolla d'aigua (1,5 L)|Wasserflasche (1,5 L)|水瓶（1.5升）|水ボトル（1.5L）|Бутылка воды (1,5 л)`.split("\n").forEach(l=>{const a=l.split("|");D.set(a[0].toLowerCase(),a.slice(1))});
+`Hay que destruir el cerebro: apunta a la cabeza o no sirve.|You must destroy the brain: aim for the head or it won't work.|Cal destruir el cervell: apunta al cap o no serveix.|Man muss das Gehirn zerstören: Ziel auf den Kopf, sonst nützt es nichts.|必须摧毁大脑：瞄准头部，否则无效。|脳を破壊しなければならない。頭を狙わないと効果がない。|Нужно уничтожить мозг: целься в голову, иначе всё бесполезно.
+Sin agua no hay plan. Almacénala antes que nada.|No water, no plan. Stock it before anything else.|Sense aigua no hi ha pla. Emmagatzema-la abans que res.|Ohne Wasser kein Plan. Lagere es vor allem anderen.|没有水就没有计划。先囤水。|水がなければ計画は成り立たない。まず水を備蓄しよう。|Без воды нет плана. Запасай её прежде всего.
+Evita las ciudades: cuanta más gente, más muertos.|Avoid cities: the more people, the more dead.|Evita les ciutats: com més gent, més morts.|Meide Städte: je mehr Menschen, desto mehr Tote.|远离城市：人越多，死者越多。|都市は避けよう。人が多いほど死者も多い。|Избегай городов: чем больше людей, тем больше мертвецов.
+Conoce dos salidas de cada habitación.|Know two exits from every room.|Coneix dues sortides de cada habitació.|Kenne zwei Ausgänge in jedem Raum.|了解每个房间的两个出口。|どの部屋でも出口を二つ把握しよう。|Знай два выхода из каждой комнаты.
+Las armas silenciosas atraen menos atención.|Silent weapons draw less attention.|Les armes silencioses atrauen menys atenció.|Leise Waffen ziehen weniger Aufmerksamkeit an.|无声武器引来的注意更少。|静かな武器は注目を集めにくい。|Бесшумное оружие привлекает меньше внимания.
+Un arma que no se recarga nunca se queda sin munición.|A weapon that needs no reloading never runs out of ammo.|Una arma que no es recarrega mai es queda sense munició.|Eine Waffe ohne Nachladen hat nie keine Munition.|不需要装弹的武器永远不会没子弹。|装填のいらない武器は弾切れしない。|Оружие, которое не надо перезаряжать, никогда не останется без патронов.
+Nunca viajes solo si puedes evitarlo.|Never travel alone if you can avoid it.|No viatgis mai sol si pots evitar-ho.|Reise nie allein, wenn es sich vermeiden lässt.|尽量不要独自出行。|できるだけ一人で移動しない。|Не путешествуй в одиночку, если можно избежать.
+Mantén la calma: el pánico mata antes que el virus.|Stay calm: panic kills before the virus does.|Mantén la calma: el pànic mata abans que el virus.|Bleib ruhig: Panik tötet eher als das Virus.|保持冷静：恐慌比病毒更致命。|落ち着いて。パニックはウイルスより先に命を奪う。|Сохраняй спокойствие: паника убивает раньше вируса.
+El virus se contagia por mordisco: cualquier herida debe tratarse y vigilarse.|The virus spreads by bite: treat and monitor any wound.|El virus es contagia per mossegada: qualsevol ferida s'ha de tractar i vigilar.|Das Virus wird durch Bisse übertragen: Jede Wunde behandeln und beobachten.|病毒通过咬伤传播：任何伤口都要处理并观察。|ウイルスは噛まれて感染する。どんな傷も手当てして経過を見よう。|Вирус передаётся укусом: любую рану нужно обработать и наблюдать.
+No pelees si puedes huir. Cada enfrentamiento arriesga una mordedura.|Don't fight if you can flee. Every fight risks a bite.|No lluitis si pots fugir. Cada enfrontament arrisca una mossegada.|Kämpfe nicht, wenn du fliehen kannst. Jeder Kampf riskiert einen Biss.|能逃就别打。每次搏斗都有被咬的风险。|逃げられるなら戦わない。戦いは噛まれる危険がある。|Не дерись, если можно убежать. Каждая схватка — риск укуса.
+Fija un punto de encuentro y señales acordadas con tu grupo.|Set a meeting point and agreed signals with your group.|Fixa un punt de trobada i senyals acordats amb el teu grup.|Lege mit deiner Gruppe einen Treffpunkt und Signale fest.|与团队约定集合点和信号。|グループで集合場所と合図を決めておこう。|Определи с группой место встречи и сигналы.
+Lleva cosas útiles para trueque: el dinero deja de valer.|Carry useful items to barter: money stops being worth anything.|Porta coses útils per al trispol: els diners deixen de valer.|Nimm nützliche Tauschwaren mit: Geld verliert seinen Wert.|携带可用于易货的物品：钱会失去价值。|物々交換に使える物を持とう。お金は価値を失う。|Бери полезное для обмена: деньги обесценятся.
+En la ficción, el ruido atrae a los muertos: prefiere herramientas silenciosas y ligeras.|In fiction, noise attracts the dead: prefer quiet, light tools.|En la ficció, el soroll atrau els morts: prefereix eines silencioses i lleugeres.|In der Fiktion zieht Lärm die Toten an: Bevorzuge leise, leichte Werkzeuge.|在虚构中，噪音会引来死者：选择安静轻便的工具。|フィクションでは音が死者を引き寄せる。静かで軽い道具を選ぼう。|В фантастике шум привлекает мертвецов: выбирай тихие и лёгкие инструменты.
+Refuerza solo un acceso principal y deja una salida de escape discreta.|Reinforce only one main entrance and leave a discreet escape exit.|Reforça només un accés principal i deixa una sortida d'escapament discreta.|Sichere nur einen Haupteingang und lass einen unauffälligen Fluchtweg.|只加固一个主入口，并留一个隐蔽的逃生口。|主な出入口は一つだけ補強し、目立たない脱出口を残そう。|Укрепляй только один главный вход и оставь скрытый запасной выход.
+Almacena agua primero y comida que no necesite cocinar.|Store water first, then food that needs no cooking.|Emmagatzema primer aigua i després menjar que no calgui cuinar.|Lagere zuerst Wasser und dann Essen ohne Kochen.|先囤水，再囤免煮食物。|まず水、次に調理不要の食料を備蓄しよう。|Сначала запасай воду, затем еду без готовки.
+Evita luces visibles desde fuera: tapa las ventanas.|Avoid lights visible from outside: cover the windows.|Evita llums visibles des de fora: tapa les finestres.|Vermeide von außen sichtbares Licht: Fenster abdecken.|避免外面可见的灯光：遮住窗户。|外から見える明かりは避け、窓を覆おう。|Избегай света, видимого снаружи: закрой окна.
+Una mochila de huida: agua, calzado, mapa, botiquín y un arma ligera.|A bug-out bag: water, footwear, map, first aid kit and a light weapon.|Una motxilla de fugida: aigua, calçat, mapa, farmaciola i una arma lleugera.|Ein Fluchtrucksack: Wasser, Schuhe, Karte, Erste-Hilfe-Set und eine leichte Waffe.|逃生背包：水、鞋、地图、急救包和一件轻便武器。|脱出用リュック：水、靴、地図、救急箱、軽い武器。|Тревожный рюкзак: вода, обувь, карта, аптечка и лёгкое оружие.
+Prueba tu mochila: si no puedes correr 1 km con ella, es demasiado pesada.|Test your pack: if you can't run 1 km with it, it's too heavy.|Prova la teva motxilla: si no pots córrer 1 km amb ella, pesa massa.|Teste deinen Rucksack: Wenn du damit nicht 1 km rennen kannst, ist er zu schwer.|测试你的背包：背着它跑不了1公里就太重了。|リュックを試そう。背負って1km走れないなら重すぎる。|Проверь рюкзак: если не можешь пробежать с ним 1 км, он слишком тяжёлый.
+Limpia siempre las heridas con agua y antiséptico y revísalas cada día.|Always clean wounds with water and antiseptic and check them daily.|Neteja sempre les ferides amb aigua i antisèptic i revisa-les cada dia.|Reinige Wunden immer mit Wasser und Desinfektionsmittel und kontrolliere sie täglich.|始终用水和消毒剂清洗伤口，并每天检查。|傷は必ず水と消毒薬で洗い、毎日確認しよう。|Всегда промывай раны водой и антисептиком и проверяй ежедневно.
+Revisa caducidades cada 6 meses y no mezcles medicación de distintas personas.|Check expiry dates every 6 months and don't mix different people's medication.|Revisa les caducitats cada 6 mesos i no barregis medicació de persones diferents.|Prüfe alle 6 Monate die Haltbarkeit und vermische keine Medikamente verschiedener Personen.|每6个月检查一次有效期，不要混用不同人的药品。|6か月ごとに期限を確認し、他の人の薬と混ぜない。|Проверяй сроки годности раз в 6 месяцев и не смешивай лекарства разных людей.
+Rota la despensa: consume lo más antiguo y repón.|Rotate your pantry: use the oldest first and restock.|Rota el rebost: consumeix el més antic i reposa.|Rotiere den Vorrat: Zuerst das Älteste verbrauchen und auffüllen.|轮换食品：先吃最旧的并及时补充。|備蓄は循環させ、古い物から使って補充しよう。|Ротация запасов: сначала старое, затем пополняй.
+Planifica a largo plazo: las latas se acaban, un huerto no.|Plan for the long term: cans run out, a garden doesn't.|Planifica a llarg termini: les llaunes s'acaben, un hort no.|Plane langfristig: Dosen gehen zur Neige, ein Garten nicht.|做长远打算：罐头会吃完，菜园不会。|長期で考えよう。缶詰はなくなるが、菜園は続く。|Планируй надолго: консервы кончаются, огород — нет.
+Revisa tu equipo cada mes: el estado importa más que el porcentaje.|Check your gear every month: condition matters more than percentage.|Revisa el teu equip cada mes: l'estat importa més que el percentatge.|Prüfe deine Ausrüstung monatlich: Der Zustand zählt mehr als der Prozentsatz.|每月检查装备：状态比百分比更重要。|毎月装備を点検しよう。割合より状態が大切。|Проверяй снаряжение каждый месяц: состояние важнее процентов.
+Manual de campo|Field manual|Manual de camp|Feldhandbuch|野外手册|フィールドマニュアル|Полевое руководство
+Buenas prácticas|Best practices|Bones pràctiques|Bewährte Praxis|最佳实践|ベストプラクティス|Лучшие практики`.split("\n").forEach(l=>{const a=l.split("|");D.set(a[0].toLowerCase(),a.slice(1))});
+const orig=new WeakMap(),last=new WeakMap();let raf=0;
+const li=()=>Math.max(0,LG.findIndex(l=>l[0]==S.lang));
+function tr(s,i){if(!i)return s;return s.split(/( · )/).map(q=>{const w=D.get(q.trim().toLowerCase());return w?w[i-1]:q.split(/(: )/).map(p=>{const m=p.match(/^([^\p{L}]*)([\s\S]*?)([^\p{L}]*)$/u);if(!m||!m[2])return p;let y=m[3],v=D.get((m[2]+y).toLowerCase());if(v)y="";else v=D.get(m[2].toLowerCase());if(!v)return p;let r=v[i-1];if(m[2]==m[2].toUpperCase()&&m[2]!=m[2].toLowerCase())r=r.toUpperCase();return m[1]+r+y}).join("")}).join("")}
+function run(){const i=li(),w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentNode&&/^(SCRIPT|STYLE|NOSCRIPT)$/.test(n.parentNode.tagName)?2:1});let n;
+while(n=w.nextNode()){let o=orig.get(n);if(o===undefined||n.data!==last.get(n)){o=n.data;orig.set(n,o)}const t=tr(o,i);if(t!==n.data)n.data=t;last.set(n,t)}
+document.documentElement.lang=LG[i][0];document.querySelectorAll("#lgr button").forEach(b=>b.classList.toggle("on",b.dataset.lg==LG[i][0]))}
+new MutationObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(run)}).observe(document.body,{childList:true,subtree:true,characterData:true});
+document.querySelector("header.hd").insertAdjacentHTML("afterend",'<div class="lgr" id="lgr">'+LG.map(l=>`<button data-lg="${l[0]}">${l[1]}</button>`).join("")+"</div>");
+$("gd").insertAdjacentHTML("beforebegin",'<button id="nm" class="gb" aria-label="Night">🌙</button>');
+function night(){document.body.classList.toggle("night",!!S.night);$("nm").textContent=S.night?"☀️":"🌙";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=S.night?"#15130f":"#1f1a14"}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-lg],#nm");if(!b)return;if(b.id=="nm"){S.night=!S.night;night()}else{S.lang=b.dataset.lg;run()}sv()});
+night();run();
 })();
 </script></body></html>
