@@ -300,7 +300,7 @@ const I=`Agua potable|L|pd|3|he|ANXZ|MAN|Antes que la comida: sin agua no pasas 
 Comida enlatada o que no necesita cocinar|raciones|pd|3|he|ANXZ|MAN|Cocinar huele y hace humo: ambos atraen.
 Pastillas potabilizadoras|ud|pp|10|he|ANXZ|MAN|
 Filtro de agua portátil|ud|hh|1|e|NXZ|MAN|
-Machete o hacha de campo|ud|pp|1|he|ANXZ|MAN|Herramienta de corte. Cumple siempre la normativa local sobre su porte y uso.
+Machete|ud|pp|1|he|ANXZ|MAN|Herramienta de corte. Cumple siempre la normativa local sobre su porte y uso.
 Palanca (pie de cabra)|ud|hh|1|he|ANXZ|MAN|Abre puertas y sirve de defensa.
 Cuchillo de monte|ud|pp|1|he|NXZ|-|
 Ropa gruesa de manga larga|set|pp|1|he|ANXZ|MAN|Sin bufandas ni cordones sueltos que se puedan agarrar.
@@ -334,7 +334,9 @@ Comida y agua para mascotas|días|pt|1|he|ANXZ|-|
 Generador y combustible|ud|hh|1|h|XZ|-|
 Semillas y herramientas de huerto|set|hh|1|h|XZ|MAN|Para el largo plazo: cultiva donde vives.
 Depósito de agua de lluvia|ud|hh|1|h|XZ|-|
-Sedal y anzuelos|set|hh|1|h|XZ|-|`.split("\n").map(l=>{const a=l.split("|");return{n:a[0],u:a[1],t:a[2],k:+a[3],b:a[4],s:a[5],r:a[6],j:a[7]}});
+Sedal y anzuelos|set|hh|1|h|XZ|-|
+Hacha de campo|ud|pp|1|he|ANXZ|MAN|Herramienta de corte. Cumple siempre la normativa local sobre su porte y uso.
+Pala de zapador|ud|hh|1|he|NXZ|-|Cava, despeja el paso y sirve para improvisar un refugio.`.split("\n").map(l=>{const a=l.split("|");return{n:a[0],u:a[1],t:a[2],k:+a[3],b:a[4],s:a[5],r:a[6],j:a[7]}});
 const SC={A:"🏚 Atrincherado",N:"🏃 En fuga",X:"🏕 Refugio remoto",Z:"🏰 Fortaleza"};
 let S={p:2,pets:0,days:7,sc:"A",chk:{},food:[],water:0,tab:"h"};
 try{Object.assign(S,JSON.parse(localStorage.getItem("tps")||"{}"))}catch(e){}
@@ -350,8 +352,9 @@ if(!S.inv){S.inv={};pairs(()=>true).forEach(x=>{if(S.chk[x.k]){if(isW(x.it)){if(
 const $=i=>document.getElementById(i);
 function qty(it,b){const d=b=="e"?3:S.days,P=S.p,t=it.t,k=it.k;const q=t=="pd"?k*P*d:t=="pp"?k*P:t=="hh"?k:t=="hd"?k*d:t=="pt"?k*S.pets*d:k*S.pets;return Math.ceil(q-1e-9)}
 function pairs(f){const o=[];I.forEach((it,i)=>[...it.b].forEach(b=>{if(qty(it,b)>0&&f(it))o.push({it,i,b,k:i+b})}));return o}
+const STK=it=>/mascarilla|mechero/i.test(it.n),LIM=10;
 const UNIT=it=>!isW(it)&&!/^(m|días|L)$/.test(it.u)&&!/pastilla/i.test(it.n);
-const frc=x=>{const need=qty(x.it,x.b);if(!need)return 0;if(x.b=="h")return Math.min(1,iv(x.i)/need);const pl=(S.pk&&S.pk.pl)||{};if(isW(x.it)){let s=0;wl(x.i).forEach((l,n)=>{if(pl[x.k+"_"+n])s+=l});return Math.min(1,s/need)}const nn=S.pk&&S.pk.n&&S.pk.n[x.k],c=nn===undefined?iv(x.i):Math.min(nn,iv(x.i));if(UNIT(x.it)){let s=0;for(let n=0;n<Math.max(1,Math.floor(c+1e-9));n++)if(pl[x.k+"~"+n])s++;return Math.min(1,s/need)}return pl[x.k]?Math.min(1,c/need):0};
+const frc=x=>{const need=qty(x.it,x.b);if(!need)return 0;if(x.b=="h")return Math.min(1,iv(x.i)/need);const pl=(S.pk&&S.pk.pl)||{};if(isW(x.it)){let s=0;wl(x.i).forEach((l,n)=>{if(pl[x.k+"_"+n])s+=l});return Math.min(1,s/need)}const nn=S.pk&&S.pk.n&&S.pk.n[x.k],c=nn===undefined?iv(x.i):Math.min(nn,iv(x.i));if(UNIT(x.it)){let s=0;const st=S.pk.st||{};for(const k in pl)if(k.indexOf(x.k+"~")==0)s+=st[k]||1;return Math.min(1,Math.min(s,Math.max(1,Math.floor(c+1e-9)))/need)}return pl[x.k]?Math.min(1,c/need):0};
 function sync(){pairs(()=>true).forEach(x=>{S.chk[x.k]=frc(x)>=1})}
 const pct=(f,bag)=>{const a=pairs(f).filter(x=>!bag||x.b==bag);return a.length?Math.round(100*a.reduce((s,x)=>s+frc(x),0)/a.length):0};
 const col=p=>p<34?"var(--r)":p<67?"var(--a)":"var(--g)";
@@ -444,7 +447,7 @@ if(d.t&&S.tips!==false)setTimeout(()=>tip(0),700)});
 setTimeout(()=>tip(0),1800);
 const PAL={k:"#120c05",w:"#efe6cc",g:"#8c9298",b:"#3f7fd0",r:"#c8372d",y:"#e8b83a",n:"#8a5a2b",G:"#4fa04f"};
 const SP={water:"...kk.../..kwwk../..kbbk../.kbbbbk./.kbwbbk./.kbbbbk./.kbbbbk./..kkkk..",food:"..kkkk../.kggggk./.krrrrk./.krwwrk./.krrrrk./.krrrrk./.kggggk./..kkkk..",flash:"..kyyk../.kyyyyk./..kggk../..kggk../..kgwk../..kggk../..kggk../..kkkk..",bat:"..kkkk../.kyyyyk./.kGGGGk./.kGwwGk./.kGGGGk./.kGGGGk./.kkkkkk./........",radio:"..k...../...k..../.kkkkkk./.kggggk./.kgyygk./.kggggk./.kgkkgk./.kkkkkk.",med:"..kkkk../.kwwwwk./kwwwrwwk/kwwrrrwk/kwwwrwwk/kwwwwwwk/.kwwwwk./..kkkk..",pills:"..kkkk../.krrwwk./.krrwwk./..kkkk../......../...kkk../..kwwwk./...kkk..",cash:"......../kkkkkkkk/kGGGGGGk/kGGyyGGk/kGyGGyGk/kGGyyGGk/kGGGGGGk/kkkkkkkk",doc:".kkkkk../.kwwwwk./.kwkkwk./.kwwwwk./.kwkkwk./.kwwwwk./.kwkkwk./.kkkkkk.",blanket:"......../kkkkkkkk/krrrrrrk/krwrwrrk/krrrrrrk/kkkkkkkk/......../........",stove:"..y.y.../.yyyyy../kkkkkkkk/kggggggk/kgkkkkgk/kggggggk/kkkkkkkk/........",tool:"..kkk.../.kggkk../..kgk.../...kgk../....kgk./.....kgk/....knnk/.....kk.",mask:"......../.kkkkkk./kwwwwwwk/kwwwwwwk/kkwwwwkk/.kkkkkk./......../........",key:"..kkk.../.kyyyk../.kykyk../.kyyyk../..kyk.../..kyyk../..kyk.../..kyyk..",map:"kkkkkkkk/kwwkwwwk/kwGkwbwk/kwwkwwwk/kwwkwwwk/kwwkwrwk/kwwkwwwk/kkkkkkkk",fire:"...r..../..rry.../.rryyr../.ryyyr../.rryyr../..kkk.../..kwk.../..kkk...",spray:"..kk..../..kkkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./.kbbbbk./..kkkk..",tape:"..kkkk../.kyyyyk./kyyggyyk/kygkkgyk/kygkkgyk/kyyggyyk/.kyyyyk./..kkkk..",paw:"k.k..k.k/kwk..kwk/.k.kk.k./..kwwk../.kwwwwk./.kwwwwk./..kwwk../........",cloth:".kk..kk./kwwkkwwk/kwwwwwwk/.kwwwwk./.kwwwwk./.kwwwwk./.kwwwwk./.kkkkkk.",box:"kkkkkkkk/knnnnnnk/knyyyynk/knnnnnnk/knnnnnnk/knnnnnnk/kkkkkkkk/........"};
-const IM=[[/cinta/,"tape"],[/mascarilla|guantes/,"mask"],[/gel |toallitas|higiene|antisép/,"spray"],[/pastilla|paracetamol|antihist|antidiar|medicaci|yodo|comprimid/,"pills"],[/manta/,"blanket"],[/botiqu|gasas|vendas|tiritas|esparadrapo|quemad|termóm/,"med"],[/mascota/,"paw"],[/agua|suero|sales|potab|filtro/,"water"],[/comida|raciones/,"food"],[/mechero|cerill|vela/,"fire"],[/linterna|frontal/,"flash"],[/pila|batería|cargador/,"bat"],[/radio|geiger/,"radio"],[/efectivo/,"cash"],[/document|recetas|copia|plan familiar|alergias|guía|pendrive|estanca/,"doc"],[/hornillo|cartucho|gas/,"stove"],[/llaves/,"key"],[/mapa/,"map"],[/ropa|botas|chaleco|impermeable/,"cloth"],[/herram|multiher|tijeras|pinzas|silbato|extintor|sacos|plástico/,"tool"]];
+const IM=[[/pala de zapador/,"tool"],[/cinta/,"tape"],[/mascarilla|guantes/,"mask"],[/gel |toallitas|higiene|antisép/,"spray"],[/pastilla|paracetamol|antihist|antidiar|medicaci|yodo|comprimid/,"pills"],[/manta/,"blanket"],[/botiqu|gasas|vendas|tiritas|esparadrapo|quemad|termóm/,"med"],[/mascota/,"paw"],[/agua|suero|sales|potab|filtro/,"water"],[/comida|raciones/,"food"],[/mechero|cerill|vela/,"fire"],[/linterna|frontal/,"flash"],[/pila|batería|cargador/,"bat"],[/radio|geiger/,"radio"],[/efectivo/,"cash"],[/document|recetas|copia|plan familiar|alergias|guía|pendrive|estanca/,"doc"],[/hornillo|cartucho|gas/,"stove"],[/llaves/,"key"],[/mapa/,"map"],[/ropa|botas|chaleco|impermeable/,"cloth"],[/herram|multiher|tijeras|pinzas|silbato|extintor|sacos|plástico/,"tool"]];
 const IC={};function ic(n){const t=n.toLowerCase(),k=(IM.find(m=>m[0].test(t))||[0,"box"])[1];return IC[k]||(IC[k]=`<svg viewBox="0 0 8 ${SP[k].split("/").length}" shape-rendering="crispEdges">`+SP[k].split("/").map((r,y)=>[...r].map((c,x)=>c=="."?"":`<rect x="${x}" y="${y}" width="1" height="1" fill="${PAL[c]}"/>`).join("")).join("")+"</svg>")}
 function bp(f){try{const a=bp.c||(bp.c=new AudioContext()),o=a.createOscillator(),g=a.createGain();o.type="square";o.frequency.value=f;g.gain.value=.04;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.07)}catch(e){}}
 function items(t){if(t=="b")return BO.map((it,i)=>({key:"b"+i,it,q:qty(it,"h"),have:!!S.bk[i],i,c:it.c}));return pairs(it=>it.s.includes(S.sc)&&it.b.includes(t)).filter(x=>x.b==t).map(x=>({key:x.k,it:x.it,q:qty(x.it,x.b),have:!!S.chk[x.k],i:x.i}))}
@@ -468,13 +471,14 @@ Object.assign(PAL,{k:"#0d0e0a",w:"#cfc8b0",g:"#7c8077",b:"#5f7f8f",r:"#8f2f26",y
 SP.water="..kkk.../..kgk.../.kkbkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./..kkkk..";
 SP.food="..kkkk../.kyyyyk./.kggggk./.kwrrwk./.kwrrwk./.kggggk./.kggggk./..kkkk..";
 const C=5,SZ={water:[2,2],food:[2,2],flash:[1,1],bat:[1,1],radio:[1,2],med:[2,1],pills:[1,1],cash:[1,1],doc:[1,2],blanket:[2,2],stove:[2,2],tool:[1,2],mask:[1,1],key:[1,1],map:[2,1],fire:[1,1],spray:[1,1],tape:[1,1],paw:[2,1],cloth:[2,2],box:[1,1],medkit:[2,2],bandage:[1,1],knife:[1,2],gas:[1,1],saline:[1,1],bottle:[1,2]};
-S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};
+S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};S.pk.st=S.pk.st||{};
 const P=()=>S.pk,R=()=>P().L/10;
 const ik=n=>{const t=n.toLowerCase();return(IM.find(m=>m[0].test(t))||[0,"box"])[1]};
 const KS={food:{per:4,min:2},mask:{fix:1},gas:{fix:1},cash:{per:300,min:1},pills:{per:10,min:1},med:{per:7,min:2},paw:{per:2,min:2},bat:{per:2,min:1},fire:{per:4,min:1},blanket:{u:2}};
 function shape(A,b){const Rm=R();A=Math.max(1,Math.min(A,C*Rm));if(A==b[0]*b[1]&&b[1]<=Rm)return b;let best=null;for(let w=1;w<=C;w++){const h=Math.ceil(A/w);if(h>Rm)continue;const sc=(w*h-A)*2+Math.abs(w-h)+(w>h?.1:0);if(!best||sc<best[0])best=[sc,[w,h]]}return best?best[1]:[C,Rm]}
 const BIG=new Set(["water","blanket","stove","tool","radio","med","doc","map","knife","bottle","cloth","medkit","flash"]);
-function dm(x){if(x.un){const k=ik(x.it.n),b=BIG.has(k)?(SZ[k]||[1,1]):[1,1];return P().rt[x.key]?[b[1],b[0]]:b}const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=R()>=3?[1,3]:[3,1];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.fix?c.fix:c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
+const nsz=n=>{n=n.toLowerCase();return /pala de zapador|manta o saco/.test(n)?[2,3]:/machete|hacha|palanca/.test(n)?[1,3]:/pastilla/.test(n)?[1,1]:null};
+function dm(x){const ov=nsz(x.it.n);if(ov)return P().rt[x.key]?[ov[1],ov[0]]:ov;if(x.un){const k=ik(x.it.n),b=BIG.has(k)?(SZ[k]||[1,1]):[1,1];return P().rt[x.key]?[b[1],b[0]]:b}const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=R()>=3?[1,3]:[3,1];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.fix?c.fix:c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
 function fits(k,px,py,L){const x=L.find(i=>i.key==k),[w,h]=dm(x);if(px<0||py<0||px+w>C||py+h>R())return 0;
 return L.every(o=>{const q=P().pl[o.key];if(o.key==k||!q)return 1;const [a,b]=dm(o);return px+w<=q.x||q.x+a<=px||py+h<=q.y||q.y+b<=py})}
 let pkmsg="";window.PK={dm,fits,R,C};
@@ -490,7 +494,9 @@ items=function(t){
 if(t=="h"){const o=[];I.forEach((it,i)=>{if(!it.s.includes(S.sc))return;const b=it.b.includes("h")?"h":"e",q=qty(it,b);if(q>0)o.push({key:i+b,it,q,i,b})});return o}
 if(t=="e"){const o=[],pl=S.pk.pl;I.forEach((it,i)=>{if(!it.s.includes(S.sc)||!it.b.includes("e"))return;const need=qty(it,"e"),v=iv(i);if(!(need>0)||v<=0)return;
 if(isW(it)){const bt={...it,n:"Botella de agua (1,5 L)",u:"botella"};wl(i).forEach((l,n)=>o.push({key:i+"e_"+n,it:bt,q:1,l,bt:1,i,have:!!pl[i+"e_"+n]}))}
-else{const nn=S.pk.n&&S.pk.n[i+"e"],cq=nn===undefined?Math.min(v,need):Math.min(nn,v);if(UNIT(it)){const ck=i+"e";for(let n=0;n<Math.max(1,Math.floor(cq+1e-9));n++)o.push({key:ck+"~"+n,ck,un:1,it,q:cq,need,v,i,have:!!pl[ck+"~"+n]})}else o.push({key:i+"e",it,q:cq,need,v,i,have:!!pl[i+"e"]})}});return o}
+else{const nn=S.pk.n&&S.pk.n[i+"e"],cq=nn===undefined?Math.min(v,need):Math.min(nn,v);if(UNIT(it)){const ck=i+"e";const cnt=Math.max(1,Math.floor(cq+1e-9)),pre=ck+"~",st=S.pk.st,us=new Set();let tot=0;
+Object.keys(pl).forEach(k=>{if(k.slice(0,pre.length)!=pre)return;let c=st[k]||1;if(tot+c>cnt){c=cnt-tot;if(c<=0){delete pl[k];delete st[k];return}st[k]=c}tot+=c;us.add(+k.slice(pre.length));o.push({key:k,ck,un:1,it,q:cq,need,v,i,have:1,c})});
+for(let n=0,r=cnt-tot;r>0;r--){while(us.has(n))n++;us.add(n);o.push({key:pre+n,ck,un:1,it,q:cq,need,v,i,have:false,c:1})}}else o.push({key:i+"e",it,q:cq,need,v,i,have:!!pl[i+"e"]})}});return o}
 return _it(t)};
 function invGrid(){const L=items("h");if(!L.some(x=>x.key==S.cur))S.cur=L[0]&&L[0].key;sync();
 const f1=x=>Math.min(1,iv(x.i)/x.q),n=L.filter(x=>f1(x)>=1).length,pp=L.length?Math.round(100*L.reduce((s,x)=>s+f1(x),0)/L.length):0;
@@ -505,19 +511,19 @@ const L=items("e"),p=P(),r=R();
 Object.keys(p.pl).forEach(k=>{const i=parseInt(k),m=k.match(/_(\d+)$/),it=I[i];if(!it||iv(i)<=0||(UNIT(it)&&/e$/.test(k))||(m?+m[1]>=wl(i).length:isW(it)))delete p.pl[k]});
 L.forEach(x=>{const q=p.pl[x.key];if(q&&(!(x.q>0)||!fits(x.key,q.x,q.y,L)))delete p.pl[x.key]});
 if(!L.some(x=>x.key==S.cur))S.cur=L[0]&&L[0].key;sync();
-const pl=L.filter(x=>p.pl[x.key]),un=L.filter(x=>!p.pl[x.key]),used=pl.reduce((s,x)=>{const d=dm(x);return s+d[0]*d[1]},0),lab=x=>x.un?"":x.bt?String(x.l).replace(".",",")+"L":(x.v>x.q+1e-9?x.q+"/"+(+x.v.toFixed(1)):x.q);
+const pl=L.filter(x=>p.pl[x.key]),un=L.filter(x=>!p.pl[x.key]),used=pl.reduce((s,x)=>{const d=dm(x);return s+d[0]*d[1]},0),lab=x=>x.un?(x.c>1?"×"+x.c:""):x.bt?String(x.l).replace(".",",")+"L":(x.v>x.q+1e-9?x.q+"/"+(+x.v.toFixed(1)):x.q);
 if(!L.length)return `<div class="pn"><div class="ih"><span>MOCHILA · ${p.L} L</span></div><small>Aún no tienes nada en el inventario. Marca lo que tienes en la pestaña INVENTARIO y aparecerá aquí listo para guardar en la mochila.</small><div class="pa"><button data-t="h">IR AL INVENTARIO</button></div></div>`;
 const pc=pl.map(x=>{const [w,h]=dm(x),q=p.pl[x.key];return `<div class="pc ${x.key==S.cur?"sel":""}" data-pk="${x.key}" style="left:${q.x*20}%;top:${q.y/r*100}%;width:${w*20}%;height:${h/r*100}%">${ic(x.it.n)}<i>${lab(x)}</i></div>`}).join("");
 const tr=un.map(x=>{const [w,h]=dm(x);return `<div class="tp ${x.key==S.cur?"sel":""}" data-pk="${x.key}" style="width:${w*40}px;height:${h*40}px">${ic(x.it.n)}<i>${lab(x)}</i></div>`}).join("");
 const f=L.find(x=>x.key==S.cur),d=f&&dm(f);let dt="";const mg=pkmsg;pkmsg="";
 if(f){const nd=qty(f.it,"e");if(f.bt){const lt=wl(f.i).reduce((s,l,n)=>s+(p.pl[f.i+"e_"+n]?l:0),0);dt=`<h3>${f.it.n}${f.l<1.5?" · "+String(f.l).replace(".",",")+" L":""}</h3><div>EN MOCHILA: <b>${String(+lt.toFixed(1)).replace(".",",")} / ${nd} L</b> ${lt>=nd-1e-9?"":'<span class="bd">PARCIAL</span>'}</div>`}
-else dt=`<h3>${f.it.n}</h3><div>EN ALMACÉN: <b>×${+f.v.toFixed(1)} ${f.it.u}</b></div><div>LLEVAS: <b>×${f.q}</b> · NECESITAS: <b>×${f.need}</b> ${f.q<f.need?'<span class="bd">PARCIAL</span>':""}</div><div>${bg(f.it.r)}</div>`}
+else dt=`<h3>${f.it.n}</h3><div>EN ALMACÉN: <b>×${+f.v.toFixed(1)} ${f.it.u}</b></div>${f.c>1?`<div>PILA: <b>×${f.c}</b></div>`:""}<div>LLEVAS: <b>×${f.q}</b> · NECESITAS: <b>×${f.need}</b> ${f.q<f.need?'<span class="bd">PARCIAL</span>':""}</div><div>${bg(f.it.r)}</div>`}
 return `<div class="pn"><div class="ih"><span>INVENTARIO · ${un.length} POR METER</span><span>ARRASTRA ↓</span></div><div class="tray">${tr||"<small>Todo guardado en la mochila.</small>"}</div></div>
 <div class="pn"><div class="ih"><span>MOCHILA · ${p.L} L · ${pct(x=>x.s.includes(S.sc),"e")}%</span><span>${used}/${C*r} SLOTS</span></div>
 <div class="lt">${[20,30,40,50,65,90].map(l=>`<button data-l="${l}" class="${l==p.L?"on":""}">${l}L</button>`).join("")}</div>
 <div class="pk" id="pk" style="--R:${r};aspect-ratio:${C}/${r}">${pc}</div>
 <div class="pa"><button data-auto="1">⚙ AUTO-ORDENAR</button><button data-clr="1">✕ VACIAR</button></div></div>`+
-(f?`<div class="pn det"><div class="big ${p.pl[f.key]?"on":""}">${ic(f.it.n)}</div><div class="dt">${dt}<div>OCUPA: <b>${d[0]}×${d[1]} slots</b></div>${f.it.j?`<p>${f.it.j}</p>`:""}${mg?`<p class="bad">${mg}</p>`:""}</div>${f.bt?"":`<div class="qc"><b class="stt">LLEVAR</b><div class="qr"><button data-pq="-1" aria-label="Quitar una unidad">−</button><input id="pqv" type="number" inputmode="numeric" min="0" max="${Math.floor(f.v)}" step="1" value="${f.q}" aria-label="Unidades que llevas"><button data-pq="1" aria-label="Añadir una unidad">+</button><button data-pq="all">TODO</button></div></div>`}<div class="pa" style="flex:1 1 100%"><button data-rot="1">↻ ROTAR</button>${p.pl[f.key]?'<button data-out="1">SACAR</button>':""}</div></div>`:"")}
+(f?`<div class="pn det"><div class="big ${p.pl[f.key]?"on":""}">${ic(f.it.n)}</div><div class="dt">${dt}<div>OCUPA: <b>${d[0]}×${d[1]} slots</b></div>${f.it.j?`<p>${f.it.j}</p>`:""}${mg?`<p class="bad">${mg}</p>`:""}</div>${f.bt?"":`<div class="qc"><b class="stt">LLEVAR</b><div class="qr"><button data-pq="-1" aria-label="Quitar una unidad">−</button><input id="pqv" type="number" inputmode="numeric" min="0" max="${Math.floor(f.v)}" step="1" value="${f.q}" aria-label="Unidades que llevas"><button data-pq="1" aria-label="Añadir una unidad">+</button><button data-pq="all">TODO</button></div></div>`}<div class="pa" style="flex:1 1 100%"><button data-rot="1">↻ ROTAR</button>${p.pl[f.key]?'<button data-out="1">SACAR</button>':""}${f.c>1?'<button data-sp="1">SEPARAR 1</button>':""}</div></div>`:"")}
 let dg=null,gh=null,hl=null,asc=0;
 const clean=()=>{gh&&gh.remove();hl&&hl.remove();gh=hl=null;clearInterval(asc);asc=0;document.documentElement.classList.remove("lock")};
 document.addEventListener("touchmove",e=>{if(dg)e.preventDefault()},{passive:false});
@@ -533,15 +539,17 @@ asc=setInterval(()=>{if(!dg||!dg.m)return;const H=innerHeight;if(dg.cy>H-110)scr
 document.addEventListener("pointerup",e=>{if(!dg)return;const d=dg;dg=null;clean();
 if(!d.m){S.cur=d.k;bp(520);window.openDlg&&window.openDlg();render();return}
 const rc=$("pk").getBoundingClientRect(),inn=e.clientX>rc.left-10&&e.clientX<rc.right+10&&e.clientY>rc.top-10&&e.clientY<rc.bottom+10,p=P();
-if(d.ok){const i0=items("e").find(i=>i.key==d.k);if(i0&&i0.q<=0)delete p.n[d.k];p.pl[d.k]={x:d.gx,y:d.gy};S.cur=d.k;bp(880);stt("dr")}else if(!inn&&p.pl[d.k]){delete p.pl[d.k];bp(300)}else if(inn){bp(110);navigator.vibrate&&navigator.vibrate([30,40,30])}
+{const L2=items("e"),x0=L2.find(i=>i.key==d.k);if(x0&&x0.un&&STK(x0.it)&&inn&&!d.ok){const t=L2.find(o=>o.key!=d.k&&o.ck==x0.ck&&p.pl[o.key]&&p.pl[o.key].x==d.gx&&p.pl[o.key].y==d.gy);
+if(t){const room=LIM-t.c,mv=Math.min(room,x0.c);if(mv>0){p.st[t.key]=t.c+mv;if(x0.c-mv>0&&p.pl[d.k])p.st[d.k]=x0.c-mv;else{delete p.pl[d.k];delete p.st[d.k]}S.cur=t.key;bp(880);stt("dr")}else{bp(150);navigator.vibrate&&navigator.vibrate([30,40,30])}render();return}}}
+if(d.ok){const i0=items("e").find(i=>i.key==d.k);if(i0&&i0.q<=0)delete p.n[d.k];if(!p.pl[d.k])delete p.st[d.k];p.pl[d.k]={x:d.gx,y:d.gy};S.cur=d.k;bp(880);stt("dr")}else if(!inn&&p.pl[d.k]){delete p.pl[d.k];delete p.st[d.k];bp(300)}else if(inn){bp(110);navigator.vibrate&&navigator.vibrate([30,40,30])}
 render()});
 document.addEventListener("pointercancel",()=>{dg=null;clean()});
 document.addEventListener("click",e=>{const d=e.target.dataset,p=P(),L=items("e");
 if(d.l){p.L=+d.l;render()}
-if(d.out){delete p.pl[S.cur];render()}
-if(d.clr){p.pl={};render()}
+if(d.out){delete p.pl[S.cur];delete p.st[S.cur];render()}if(d.sp){const k=S.cur;if((p.st[k]||1)>1){p.st[k]--;render()}}
+if(d.clr){p.pl={};p.st={};render()}
 if(d.rot){const k=S.cur,q=p.pl[k];p.rt[k]=p.rt[k]?0:1;if(q&&!fits(k,q.x,q.y,L)){p.rt[k]=p.rt[k]?0:1;bp(150)}else stt("ro");render()}
-if(d.auto){stt("au");L.filter(x=>!p.pl[x.key]&&x.q>0).sort((a,b)=>{const A=dm(a),B=dm(b);return B[0]*B[1]-A[0]*A[1]}).forEach(x=>{for(const r of[0,1]){p.rt[x.key]=r;for(let y=0;y<R();y++)for(let c=0;c<C;c++)if(!p.pl[x.key]&&fits(x.key,c,y,L))p.pl[x.key]={x:c,y}}if(!p.pl[x.key])p.rt[x.key]=0});bp(880);render()}});
+if(d.auto){stt("au");L.filter(x=>!p.pl[x.key]&&x.q>0).sort((a,b)=>{const A=dm(a),B=dm(b);return B[0]*B[1]-A[0]*A[1]}).forEach(x=>{if(STK(x.it)){const t=L.find(o=>o.ck==x.ck&&o.key!=x.key&&p.pl[o.key]&&(p.st[o.key]||1)<LIM);if(t){p.st[t.key]=(p.st[t.key]||1)+1;return}}for(const r of[0,1]){p.rt[x.key]=r;for(let y=0;y<R();y++)for(let c=0;c<C;c++)if(!p.pl[x.key]&&fits(x.key,c,y,L)){delete p.st[x.key];p.pl[x.key]={x:c,y}}}if(!p.pl[x.key])p.rt[x.key]=0});bp(880);render()}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-pq]");if(!b)return;const f=items("e").find(x=>x.key==S.cur);if(!f||f.bt)return;const v=b.dataset.pq=="all"?Math.floor(f.v+1e-9)||f.v:f.q+(+b.dataset.pq);setCarry(f,v)});
 document.addEventListener("change",e=>{if(e.target.id!="pqv")return;const f=items("e").find(x=>x.key==S.cur);if(f&&!f.bt)setCarry(f,+e.target.value||0)});
 for(const k in IC)delete IC[k];$("emb").innerHTML=ic("botiquín");render();
@@ -778,7 +786,7 @@ if(d.zex){const a=document.createElement("a");a.href=URL.createObjectURL(new Blo
 if(d.zimp)$("zf").click();
 if(d.zrst&&confirm("¿Borrar todos tus datos de este dispositivo?")){try{localStorage.removeItem("tps")}catch(x){}location.reload()}
 if(d.zpre){const q=d.zpre.split(",");S.p=+q[0];S.days=+q[1];S.sc=q[2];closeG();render()}});
-document.addEventListener("change",e=>{if(e.target.id!="zf"||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const n=JSON.parse(r.result);for(const k in S)delete S[k];Object.assign(S,n);S.inv=S.inv||{};S.chk=S.chk||{};S.bk=S.bk||{};S.bx=S.bx||{};S.med=S.med||[];S.food=S.food||[];S.ach=S.ach||{};S.sq=S.sq||[];S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};render()}catch(x){alert("Archivo no válido")}};r.readAsText(e.target.files[0])});
+document.addEventListener("change",e=>{if(e.target.id!="zf"||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const n=JSON.parse(r.result);for(const k in S)delete S[k];Object.assign(S,n);S.inv=S.inv||{};S.chk=S.chk||{};S.bk=S.bk||{};S.bx=S.bx||{};S.med=S.med||[];S.food=S.food||[];S.ach=S.ach||{};S.sq=S.sq||[];S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};S.pk.st=S.pk.st||{};render()}catch(x){alert("Archivo no válido")}};r.readAsText(e.target.files[0])});
 const _r6=render;render=function(){_r6();if(S.tab=="k")ficha()};
 render();
 if(!S.ob){S.ob=1;sv();setTimeout(openOB,900)}
