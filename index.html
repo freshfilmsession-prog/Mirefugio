@@ -278,6 +278,8 @@ body.night .bar{background:#2f2b20}body.night .sgb u{background:#38331f}
 body.night .pk{background-color:#16140f;background-image:linear-gradient(90deg,#ffffff1c 1px,transparent 1px),linear-gradient(#ffffff1c 1px,transparent 1px)}
 body.night .pop,body.night .sh{background:#1c1a15f7}body.night .ok{color:#7fc472}body.night .hd:before{color:var(--r)}
 body.night .slot svg{filter:grayscale(1) brightness(.6);opacity:.4}body.night .slot.on svg,body.night .slot.pt svg,body.night .big.on svg{filter:none;opacity:1}
+.trc{font:12px var(--pf);color:var(--g);margin:16px 0 2px;letter-spacing:2px}
+#dlg .qc{margin-top:4px}
 </style></head><body><noscript>Esta aplicación necesita JavaScript.</noscript>
 <header class="hd"><div class="emb" id="emb"></div><div><h1>MI REFUGIO</h1><div class="sb">Archivo de campo · Cómo sobrevivir a los muertos vivientes</div></div><button id="gd" class="gb" aria-label="Manual">📘</button></header>
 <div class="tick" id="tk"></div>
@@ -347,16 +349,18 @@ if(!S.inv){S.inv={};pairs(()=>true).forEach(x=>{if(S.chk[x.k]){if(isW(x.it)){if(
 const $=i=>document.getElementById(i);
 function qty(it,b){const d=b=="e"?3:S.days,P=S.p,t=it.t,k=it.k;const q=t=="pd"?k*P*d:t=="pp"?k*P:t=="hh"?k:t=="hd"?k*d:t=="pt"?k*S.pets*d:k*S.pets;return Math.ceil(q-1e-9)}
 function pairs(f){const o=[];I.forEach((it,i)=>[...it.b].forEach(b=>{if(qty(it,b)>0&&f(it))o.push({it,i,b,k:i+b})}));return o}
-const frc=x=>{const need=qty(x.it,x.b);if(!need)return 0;if(x.b=="h")return Math.min(1,iv(x.i)/need);const pl=(S.pk&&S.pk.pl)||{};if(isW(x.it)){let s=0;wl(x.i).forEach((l,n)=>{if(pl[x.k+"_"+n])s+=l});return Math.min(1,s/need)}return pl[x.k]?Math.min(1,iv(x.i)/need):0};
+const UNIT=it=>!isW(it)&&!/^(m|días|L)$/.test(it.u)&&!/pastilla/i.test(it.n);
+const frc=x=>{const need=qty(x.it,x.b);if(!need)return 0;if(x.b=="h")return Math.min(1,iv(x.i)/need);const pl=(S.pk&&S.pk.pl)||{};if(isW(x.it)){let s=0;wl(x.i).forEach((l,n)=>{if(pl[x.k+"_"+n])s+=l});return Math.min(1,s/need)}const nn=S.pk&&S.pk.n&&S.pk.n[x.k],c=nn===undefined?iv(x.i):Math.min(nn,iv(x.i));if(UNIT(x.it)){let s=0;for(let n=0;n<Math.max(1,Math.floor(c+1e-9));n++)if(pl[x.k+"~"+n])s++;return Math.min(1,s/need)}return pl[x.k]?Math.min(1,c/need):0};
 function sync(){pairs(()=>true).forEach(x=>{S.chk[x.k]=frc(x)>=1})}
 const pct=(f,bag)=>{const a=pairs(f).filter(x=>!bag||x.b==bag);return a.length?Math.round(100*a.reduce((s,x)=>s+frc(x),0)/a.length):0};
 const col=p=>p<34?"var(--r)":p<67?"var(--a)":"var(--g)";
 const ring=(l,p)=>`<div class="rg"><div class="ring" style="--p:${p};--c:${col(p)}"><b>${p}%</b></div>${l}</div>`;
 function food(){const kc=S.food.reduce((s,f)=>s+f.q*f.k,0);return{kc,d:kc/(2000*S.p),w:S.water/(3*S.p)}}
+function stt(k){S.st=S.st||{};S.st[k]=(S.st[k]||0)+1}
 function render(){
 document.body.dataset.sc=S.sc;$("p").value=S.p;$("pets").value=S.pets;$("days").value=S.days;$("sc").value=S.sc;
 const RG=[["TODO",""],...Object.entries(SC).map(([c,l])=>[l,c])];if(!$("rings").children.length)$("rings").innerHTML=RG.map(r=>ring(r[0],0)).join("");setTimeout(()=>[...$("rings").children].forEach((el,i)=>{const p=pct(x=>x.s.includes(RG[i][1])),rn=el.firstChild;rn.style.setProperty("--p",p);rn.style.setProperty("--c",col(p));rn.firstChild.textContent=p+"%"}),40);
-$("tabs").innerHTML=[["h","ALMACÉN"],["e","MOCHILA"],["b","BOTIQUÍN"],["f","DESPENSA"],["g","A CONSEGUIR"],["k","FICHA"]].map(t=>`<button data-t="${t[0]}" class="${S.tab==t[0]?"on":""}">${t[1]}</button>`).join("");
+$("tabs").innerHTML=[["h","ALMACÉN"],["e","MOCHILA"],["b","BOTIQUÍN"],["f","DESPENSA"],["g","A CONSEGUIR"],["k","FICHA"],["pg","PLAN"],["mn","MANUAL"]].map(t=>`<button data-t="${t[0]}" class="${S.tab==t[0]?"on":""}">${t[1]}</button>`).join("");
 const v=$("v");if(S.tab=="h"||S.tab=="e"||S.tab=="b"){v.innerHTML=(S.tab=="b"?"":cn())+grid(S.tab);sv();return}
 if(S.tab=="h"||S.tab=="e"){const L=pairs(x=>x.s.includes(S.sc)&&x.b.includes(S.tab)).filter(x=>x.b==S.tab);const p=pct(x=>x.s.includes(S.sc),S.tab);
 v.innerHTML=cn()+`<div class="pn"><h2>${S.tab=="h"?"MOCHILA DE CASA · "+S.days+" días":"MOCHILA DE EVACUACIÓN · 72 h"} · ${SC[S.sc]} · ${p}%</h2><div class="bar"><i style="width:${p}%"></i></div>`+L.map(x=>{const it=x.it,u=S.chk[x.k];return `<label class="it ${u?"d":""}" style="flex-direction:row;color:var(--t);font-size:15px"><input type="checkbox" data-k="${x.k}" ${u?"checked":""}><span><span class="nm">${it.n}</span> <span class="q">× ${qty(it,x.b)} ${it.u}</span><br>${it.r.split(" ").map(r=>r=="-"?'<span class="bd x">EXTRA</span>':`<span class="bd">${r}</span>`).join("")}${it.j?`<span class="j">${it.j}</span>`:""}</span></label>`}).join("")+"</div>"}
@@ -463,21 +467,29 @@ Object.assign(PAL,{k:"#0d0e0a",w:"#cfc8b0",g:"#7c8077",b:"#5f7f8f",r:"#8f2f26",y
 SP.water="..kkk.../..kgk.../.kkbkk../.kbbbbk./.kbwwbk./.kbbbbk./.kbbbbk./..kkkk..";
 SP.food="..kkkk../.kyyyyk./.kggggk./.kwrrwk./.kwrrwk./.kggggk./.kggggk./..kkkk..";
 const C=5,SZ={water:[2,2],food:[2,2],flash:[1,1],bat:[1,1],radio:[1,2],med:[2,1],pills:[1,1],cash:[1,1],doc:[1,2],blanket:[2,2],stove:[2,2],tool:[1,2],mask:[1,1],key:[1,1],map:[2,1],fire:[1,1],spray:[1,1],tape:[1,1],paw:[2,1],cloth:[2,2],box:[1,1],medkit:[2,2],bandage:[1,1],knife:[1,2],gas:[1,1],saline:[1,1],bottle:[1,2]};
-S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};
+S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};
 const P=()=>S.pk,R=()=>P().L/10;
 const ik=n=>{const t=n.toLowerCase();return(IM.find(m=>m[0].test(t))||[0,"box"])[1]};
 const KS={food:{per:4,min:2},mask:{fix:1},gas:{fix:1},cash:{per:300,min:1},pills:{per:10,min:1},med:{per:7,min:2},paw:{per:2,min:2},bat:{per:2,min:1},fire:{per:4,min:1},blanket:{u:2}};
 function shape(A,b){const Rm=R();A=Math.max(1,Math.min(A,C*Rm));if(A==b[0]*b[1]&&b[1]<=Rm)return b;let best=null;for(let w=1;w<=C;w++){const h=Math.ceil(A/w);if(h>Rm)continue;const sc=(w*h-A)*2+Math.abs(w-h)+(w>h?.1:0);if(!best||sc<best[0])best=[sc,[w,h]]}return best?best[1]:[C,Rm]}
-function dm(x){const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=R()>=3?[1,3]:[3,1];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.fix?c.fix:c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
+const BIG=new Set(["water","blanket","stove","tool","radio","med","doc","map","knife","bottle","cloth","medkit","flash"]);
+function dm(x){if(x.un){const k=ik(x.it.n),b=BIG.has(k)?(SZ[k]||[1,1]):[1,1];return P().rt[x.key]?[b[1],b[0]]:b}const k=ik(x.it.n),b=SZ[k]||[1,1];let s;if(x.bt)s=R()>=3?[1,3]:[3,1];else{const c=KS[k],q=Math.max(1,x.q),A=c?(c.fix?c.fix:c.per?Math.max(c.min,Math.ceil(q/c.per-1e-9)):Math.ceil(q*c.u-1e-9)):b[0]*b[1]*Math.ceil(q-1e-9);s=shape(A,b)}return P().rt[x.key]?[s[1],s[0]]:s}
 function fits(k,px,py,L){const x=L.find(i=>i.key==k),[w,h]=dm(x);if(px<0||py<0||px+w>C||py+h>R())return 0;
 return L.every(o=>{const q=P().pl[o.key];if(o.key==k||!q)return 1;const [a,b]=dm(o);return px+w<=q.x||q.x+a<=px||py+h<=q.y||q.y+b<=py})}
+let pkmsg="";window.PK={dm,fits,R,C};
+function findSpot(k,L){const p=P(),r0=p.rt[k]?1:0;for(const r of[r0,1-r0]){p.rt[k]=r;for(let y=0;y<R();y++)for(let c=0;c<C;c++)if(fits(k,c,y,L))return{pos:{x:c,y},r}}p.rt[k]=r0;return null}
+function setCarry(f,v){const p=P(),mx=Math.floor(f.v+1e-9);v=Math.max(0,Math.min(Math.round(v),mx));if(f.v<1)v=v?f.v:0;
+if(f.un){p.n[f.ck]=v;stt("ca");bp(v>=f.need?880:520);navigator.vibrate&&navigator.vibrate(15);render();return}
+const old=p.n[f.key],r0=p.rt[f.key];p.n[f.key]=v;const nl=items("e");
+if(p.pl[f.key]){if(v<=0)delete p.pl[f.key];else{const q=p.pl[f.key];if(!fits(f.key,q.x,q.y,nl)){const sp=findSpot(f.key,nl);if(sp){p.pl[f.key]=sp.pos;p.rt[f.key]=sp.r}else{if(old===undefined)delete p.n[f.key];else p.n[f.key]=old;p.rt[f.key]=r0;pkmsg="No cabe: libera hueco o elige una mochila mayor.";bp(150);navigator.vibrate&&navigator.vibrate([30,40,30]);render();return}}}}
+stt("ca");bp(v>=f.need?880:520);navigator.vibrate&&navigator.vibrate(15);render()}
 const _g=grid;
 const _it=items;
 items=function(t){
 if(t=="h"){const o=[];I.forEach((it,i)=>{if(!it.s.includes(S.sc))return;const b=it.b.includes("h")?"h":"e",q=qty(it,b);if(q>0)o.push({key:i+b,it,q,i,b})});return o}
 if(t=="e"){const o=[],pl=S.pk.pl;I.forEach((it,i)=>{if(!it.s.includes(S.sc)||!it.b.includes("e"))return;const need=qty(it,"e"),v=iv(i);if(!(need>0)||v<=0)return;
 if(isW(it)){const bt={...it,n:"Botella de agua (1,5 L)",u:"botella"};wl(i).forEach((l,n)=>o.push({key:i+"e_"+n,it:bt,q:1,l,bt:1,i,have:!!pl[i+"e_"+n]}))}
-else o.push({key:i+"e",it,q:Math.min(v,need),need,i,have:!!pl[i+"e"]})});return o}
+else{const nn=S.pk.n&&S.pk.n[i+"e"],cq=nn===undefined?Math.min(v,need):Math.min(nn,v);if(UNIT(it)){const ck=i+"e";for(let n=0;n<Math.max(1,Math.floor(cq+1e-9));n++)o.push({key:ck+"~"+n,ck,un:1,it,q:cq,need,v,i,have:!!pl[ck+"~"+n]})}else o.push({key:i+"e",it,q:cq,need,v,i,have:!!pl[i+"e"]})}});return o}
 return _it(t)};
 function invGrid(){const L=items("h");if(!L.some(x=>x.key==S.cur))S.cur=L[0]&&L[0].key;sync();
 const f1=x=>Math.min(1,iv(x.i)/x.q),n=L.filter(x=>f1(x)>=1).length,pp=L.length?Math.round(100*L.reduce((s,x)=>s+f1(x),0)/L.length):0;
@@ -489,22 +501,22 @@ h+=`<div class="pn det"><div class="big ${v>=f.q?"on":""}">${ic(it.n)}</div><div
 return h}
 grid=function(t){if(t=="h")return invGrid();if(t!="e")return _g(t);
 const L=items("e"),p=P(),r=R();
-Object.keys(p.pl).forEach(k=>{const i=parseInt(k),m=k.match(/_(\d+)$/),it=I[i];if(!it||iv(i)<=0||(m?+m[1]>=wl(i).length:isW(it)))delete p.pl[k]});
-L.forEach(x=>{const q=p.pl[x.key];if(q&&!fits(x.key,q.x,q.y,L))delete p.pl[x.key]});
+Object.keys(p.pl).forEach(k=>{const i=parseInt(k),m=k.match(/_(\d+)$/),it=I[i];if(!it||iv(i)<=0||(UNIT(it)&&/e$/.test(k))||(m?+m[1]>=wl(i).length:isW(it)))delete p.pl[k]});
+L.forEach(x=>{const q=p.pl[x.key];if(q&&(!(x.q>0)||!fits(x.key,q.x,q.y,L)))delete p.pl[x.key]});
 if(!L.some(x=>x.key==S.cur))S.cur=L[0]&&L[0].key;sync();
-const pl=L.filter(x=>p.pl[x.key]),un=L.filter(x=>!p.pl[x.key]),used=pl.reduce((s,x)=>{const d=dm(x);return s+d[0]*d[1]},0),lab=x=>x.bt?String(x.l).replace(".",",")+"L":x.q;
+const pl=L.filter(x=>p.pl[x.key]),un=L.filter(x=>!p.pl[x.key]),used=pl.reduce((s,x)=>{const d=dm(x);return s+d[0]*d[1]},0),lab=x=>x.un?"":x.bt?String(x.l).replace(".",",")+"L":(x.v>x.q+1e-9?x.q+"/"+(+x.v.toFixed(1)):x.q);
 if(!L.length)return `<div class="pn"><div class="ih"><span>MOCHILA · ${p.L} L</span></div><small>Aún no tienes nada en el inventario. Marca lo que tienes en la pestaña INVENTARIO y aparecerá aquí listo para guardar en la mochila.</small><div class="pa"><button data-t="h">IR AL INVENTARIO</button></div></div>`;
 const pc=pl.map(x=>{const [w,h]=dm(x),q=p.pl[x.key];return `<div class="pc ${x.key==S.cur?"sel":""}" data-pk="${x.key}" style="left:${q.x*20}%;top:${q.y/r*100}%;width:${w*20}%;height:${h/r*100}%">${ic(x.it.n)}<i>${lab(x)}</i></div>`}).join("");
 const tr=un.map(x=>{const [w,h]=dm(x);return `<div class="tp ${x.key==S.cur?"sel":""}" data-pk="${x.key}" style="width:${w*40}px;height:${h*40}px">${ic(x.it.n)}<i>${lab(x)}</i></div>`}).join("");
-const f=L.find(x=>x.key==S.cur),d=f&&dm(f);let dt="";
+const f=L.find(x=>x.key==S.cur),d=f&&dm(f);let dt="";const mg=pkmsg;pkmsg="";
 if(f){const nd=qty(f.it,"e");if(f.bt){const lt=wl(f.i).reduce((s,l,n)=>s+(p.pl[f.i+"e_"+n]?l:0),0);dt=`<h3>${f.it.n}${f.l<1.5?" · "+String(f.l).replace(".",",")+" L":""}</h3><div>EN MOCHILA: <b>${String(+lt.toFixed(1)).replace(".",",")} / ${nd} L</b> ${lt>=nd-1e-9?"":'<span class="bd">PARCIAL</span>'}</div>`}
-else dt=`<h3>${f.it.n}</h3><div>LLEVAS: <b>×${f.q} ${f.it.u}</b></div><div>NECESITAS: <b>×${f.need}</b> ${f.q<f.need?'<span class="bd">PARCIAL</span>':""}</div>`}
+else dt=`<h3>${f.it.n}</h3><div>EN ALMACÉN: <b>×${+f.v.toFixed(1)} ${f.it.u}</b></div><div>LLEVAS: <b>×${f.q}</b> · NECESITAS: <b>×${f.need}</b> ${f.q<f.need?'<span class="bd">PARCIAL</span>':""}</div><div>${bg(f.it.r)}</div>`}
 return `<div class="pn"><div class="ih"><span>INVENTARIO · ${un.length} POR METER</span><span>ARRASTRA ↓</span></div><div class="tray">${tr||"<small>Todo guardado en la mochila.</small>"}</div></div>
 <div class="pn"><div class="ih"><span>MOCHILA · ${p.L} L · ${pct(x=>x.s.includes(S.sc),"e")}%</span><span>${used}/${C*r} SLOTS</span></div>
 <div class="lt">${[20,30,40,50,65,90].map(l=>`<button data-l="${l}" class="${l==p.L?"on":""}">${l}L</button>`).join("")}</div>
 <div class="pk" id="pk" style="--R:${r};aspect-ratio:${C}/${r}">${pc}</div>
 <div class="pa"><button data-auto="1">⚙ AUTO-ORDENAR</button><button data-clr="1">✕ VACIAR</button></div></div>`+
-(f?`<div class="pn det"><div class="big ${p.pl[f.key]?"on":""}">${ic(f.it.n)}</div><div class="dt">${dt}<div>OCUPA: <b>${d[0]}×${d[1]} slots</b></div>${f.it.j&&!f.bt?`<p>${f.it.j}</p>`:""}</div><div class="pa" style="flex:1 1 100%"><button data-rot="1">↻ ROTAR</button>${p.pl[f.key]?'<button data-out="1">SACAR</button>':""}</div></div>`:"")}
+(f?`<div class="pn det"><div class="big ${p.pl[f.key]?"on":""}">${ic(f.it.n)}</div><div class="dt">${dt}<div>OCUPA: <b>${d[0]}×${d[1]} slots</b></div>${f.it.j?`<p>${f.it.j}</p>`:""}${mg?`<p class="bad">${mg}</p>`:""}</div>${f.bt?"":`<div class="qc"><b class="stt">LLEVAR</b><div class="qr"><button data-pq="-1" aria-label="Quitar una unidad">−</button><input id="pqv" type="number" inputmode="numeric" min="0" max="${Math.floor(f.v)}" step="1" value="${f.q}" aria-label="Unidades que llevas"><button data-pq="1" aria-label="Añadir una unidad">+</button><button data-pq="all">TODO</button></div></div>`}<div class="pa" style="flex:1 1 100%"><button data-rot="1">↻ ROTAR</button>${p.pl[f.key]?'<button data-out="1">SACAR</button>':""}</div></div>`:"")}
 let dg=null,gh=null,hl=null,asc=0;
 const clean=()=>{gh&&gh.remove();hl&&hl.remove();gh=hl=null;clearInterval(asc);asc=0;document.documentElement.classList.remove("lock")};
 document.addEventListener("touchmove",e=>{if(dg)e.preventDefault()},{passive:false});
@@ -518,17 +530,19 @@ hl.style.cssText=`left:${dg.gx*20}%;top:${dg.gy/R()*100}%;width:${w*20}%;height:
 document.addEventListener("pointermove",e=>{if(!dg)return;dg.cx=e.clientX;dg.cy=e.clientY;if(!dg.m){if(Math.hypot(e.clientX-dg.x,e.clientY-dg.y)<8)return;dg.m=1;document.documentElement.classList.add("lock");navigator.vibrate&&navigator.vibrate(10);
 asc=setInterval(()=>{if(!dg||!dg.m)return;const H=innerHeight;if(dg.cy>H-110)scrollBy(0,14);else if(dg.cy<90)scrollBy(0,-14);else return;mv()},16)}mv()});
 document.addEventListener("pointerup",e=>{if(!dg)return;const d=dg;dg=null;clean();
-if(!d.m){S.cur=d.k;bp(520);render();return}
+if(!d.m){S.cur=d.k;bp(520);window.openDlg&&window.openDlg();render();return}
 const rc=$("pk").getBoundingClientRect(),inn=e.clientX>rc.left-10&&e.clientX<rc.right+10&&e.clientY>rc.top-10&&e.clientY<rc.bottom+10,p=P();
-if(d.ok){p.pl[d.k]={x:d.gx,y:d.gy};S.cur=d.k;bp(880)}else if(!inn&&p.pl[d.k]){delete p.pl[d.k];bp(300)}else if(inn){bp(110);navigator.vibrate&&navigator.vibrate([30,40,30])}
+if(d.ok){const i0=items("e").find(i=>i.key==d.k);if(i0&&i0.q<=0)delete p.n[d.k];p.pl[d.k]={x:d.gx,y:d.gy};S.cur=d.k;bp(880);stt("dr")}else if(!inn&&p.pl[d.k]){delete p.pl[d.k];bp(300)}else if(inn){bp(110);navigator.vibrate&&navigator.vibrate([30,40,30])}
 render()});
 document.addEventListener("pointercancel",()=>{dg=null;clean()});
 document.addEventListener("click",e=>{const d=e.target.dataset,p=P(),L=items("e");
 if(d.l){p.L=+d.l;render()}
 if(d.out){delete p.pl[S.cur];render()}
 if(d.clr){p.pl={};render()}
-if(d.rot){const k=S.cur,q=p.pl[k];p.rt[k]=p.rt[k]?0:1;if(q&&!fits(k,q.x,q.y,L)){p.rt[k]=p.rt[k]?0:1;bp(150)}render()}
-if(d.auto){L.filter(x=>!p.pl[x.key]).sort((a,b)=>{const A=dm(a),B=dm(b);return B[0]*B[1]-A[0]*A[1]}).forEach(x=>{for(const r of[0,1]){p.rt[x.key]=r;for(let y=0;y<R();y++)for(let c=0;c<C;c++)if(!p.pl[x.key]&&fits(x.key,c,y,L))p.pl[x.key]={x:c,y}}if(!p.pl[x.key])p.rt[x.key]=0});bp(880);render()}});
+if(d.rot){const k=S.cur,q=p.pl[k];p.rt[k]=p.rt[k]?0:1;if(q&&!fits(k,q.x,q.y,L)){p.rt[k]=p.rt[k]?0:1;bp(150)}else stt("ro");render()}
+if(d.auto){stt("au");L.filter(x=>!p.pl[x.key]&&x.q>0).sort((a,b)=>{const A=dm(a),B=dm(b);return B[0]*B[1]-A[0]*A[1]}).forEach(x=>{for(const r of[0,1]){p.rt[x.key]=r;for(let y=0;y<R();y++)for(let c=0;c<C;c++)if(!p.pl[x.key]&&fits(x.key,c,y,L))p.pl[x.key]={x:c,y}}if(!p.pl[x.key])p.rt[x.key]=0});bp(880);render()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-pq]");if(!b)return;const f=items("e").find(x=>x.key==S.cur);if(!f||f.bt)return;const v=b.dataset.pq=="all"?Math.floor(f.v+1e-9)||f.v:f.q+(+b.dataset.pq);setCarry(f,v)});
+document.addEventListener("change",e=>{if(e.target.id!="pqv")return;const f=items("e").find(x=>x.key==S.cur);if(f&&!f.bt)setCarry(f,+e.target.value||0)});
 for(const k in IC)delete IC[k];$("emb").innerHTML=ic("botiquín");render();
 })();
 (()=>{
@@ -550,7 +564,104 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden){halt()}els
 (()=>{
 S.ach=S.ach||{};S.lv=S.lv||0;
 const cc=()=>Object.values(S.chk).filter(Boolean).length;
-const AC=[["first","PRIMER BOTÍN","Equipa tu primer objeto",()=>cc()>=1],["ten","MOCHILERO","Equipa 10 objetos",()=>cc()>=10],["water","HIDRATADO","Agua para toda tu autonomía",()=>S.water>0&&S.water>=3*S.p*S.days],["food","DESPENSA LLENA","3 días de comida",()=>food().d>=3],["med","MÉDICO DE CAMPO","Botiquín al 100%",()=>bpc()>=100],["tetris","ARTE DEL EMPAQUE","Toda la mochila de evacuación en 40 L o menos",()=>{const L=items("e"),p=S.pk;return L.length&&p.L<=40&&L.every(x=>p.pl[x.key])}],["half","PREPARADO","50% del total",()=>pct(()=>true)>=50],["full","AUTOSUFICIENTE","100% del total",()=>pct(()=>true)>=100]];
+const RN0=["CARNE FRESCA","RECLUTA","SAQUEADOR","RASTREADOR","VETERANO","CAZADOR","LEYENDA"];
+const sumInv=()=>Object.values(S.inv||{}).reduce((a,v)=>a+(+v||0),0),kinds=()=>I.filter((_,i)=>iv(i)>0).length,nbk=()=>Object.values(S.bk||{}).filter(Boolean).length,ndays=()=>Object.keys(S.vd||{}).length,sg=k=>(S.st&&S.st[k])||0,nbx=()=>Object.values(S.bx||{}).filter(Boolean),nplaced=()=>items("e").filter(x=>S.pk.pl[x.key]).length,bagAll=()=>{const L=items("e");return L.length>0&&L.every(x=>S.pk.pl[x.key])},bagPct=()=>pct(x=>x.s.includes(S.sc),"e"),scp=c=>pct(x=>x.s.includes(c)),nach=()=>Object.keys(S.ach).length,hasPet=()=>S.pets>0&&I.some((it,i)=>/mascota/i.test(it.n)&&iv(i)>0);
+const ROLES=["Médico","Mecánico","Explorador","Cocinero","Vigía","Granjero"];
+const SCN={A:["TRINCHERA","BÚNKER"],N:["CORREDOR","FUGITIVO"],X:["ERMITAÑO","ROBINSON"],Z:["GUARNICIÓN","SEÑOR DE LA FORTALEZA"]};
+const AC=[
+["first","PRIMER BOTÍN","Equipa tu primer objeto",()=>cc()>=1,"EQUIPO"],
+["ten","MOCHILERO","Equipa 10 objetos",()=>cc()>=10,"EQUIPO"],
+["t25","ARSENAL","Equipa 25 objetos",()=>cc()>=25,"EQUIPO"],
+["t50","ALMACENISTA","Equipa 50 objetos",()=>cc()>=50,"EQUIPO"],
+["t100","INTENDENTE","Equipa 100 objetos",()=>cc()>=100,"EQUIPO"],
+["inv25","EXISTENCIAS","Acumula 25 unidades en el almacén",()=>sumInv()>=25,"EQUIPO"],
+["inv100","ACAPARADOR","Acumula 100 unidades en el almacén",()=>sumInv()>=100,"EQUIPO"],
+["inv250","BÚNKER ABASTECIDO","Acumula 250 unidades en el almacén",()=>sumInv()>=250,"EQUIPO"],
+["k10","SURTIDO","Ten 10 tipos de objeto distintos",()=>kinds()>=10,"EQUIPO"],
+["k25","CATÁLOGO","Ten 25 tipos de objeto distintos",()=>kinds()>=25,"EQUIPO"],
+["k50","BAZAR DEL APOCALIPSIS","Ten 50 tipos de objeto distintos",()=>kinds()>=50,"EQUIPO"],
+["ess","LO ESENCIAL","Todos los objetivos esenciales completos",()=>{const a=pairs(x=>x.s.includes(S.sc)&&x.it.b=="he");return a.length>0&&a.every(x=>S.chk[x.k])},"EQUIPO"],
+["p25","PRIMER CUARTO","25% del total",()=>pct(()=>true)>=25,"EQUIPO"],
+["half","PREPARADO","50% del total",()=>pct(()=>true)>=50,"EQUIPO"],
+["p75","TRES CUARTOS","75% del total",()=>pct(()=>true)>=75,"EQUIPO"],
+["full","AUTOSUFICIENTE","100% del total",()=>pct(()=>true)>=100,"EQUIPO"],
+...Object.entries(SCN).flatMap(([c,n])=>[["s50"+c,n[0],"50% del equipo de "+SC[c].replace(/^\S+ /,""),()=>scp(c)>=50,"AMENAZAS"],["s100"+c,n[1],"100% del equipo de "+SC[c].replace(/^\S+ /,""),()=>scp(c)>=100,"AMENAZAS"]]),
+["water","HIDRATADO","Agua para toda tu autonomía",()=>S.water>0&&S.water>=3*S.p*S.days,"AGUA Y COMIDA"],
+["w10","SED CALMADA","Almacena 10 L de agua",()=>S.water>=10,"AGUA Y COMIDA"],
+["w50","ALJIBE","Almacena 50 L de agua",()=>S.water>=50,"AGUA Y COMIDA"],
+["w100","EMBALSE","Almacena 100 L de agua",()=>S.water>=100,"AGUA Y COMIDA"],
+["w250","LAGO PROPIO","Almacena 250 L de agua",()=>S.water>=250,"AGUA Y COMIDA"],
+["wd7","SEMANA SIN SED","Agua para 7 días",()=>food().w>=7,"AGUA Y COMIDA"],
+["wd14","QUINCENA HIDRATADA","Agua para 14 días",()=>food().w>=14,"AGUA Y COMIDA"],
+["wd30","MES AL RÍO","Agua para 30 días",()=>food().w>=30,"AGUA Y COMIDA"],
+["f1","PRIMER BOCADO","Registra tu primer alimento",()=>S.food.length>=1,"AGUA Y COMIDA"],
+["f5","DESPENSA VARIADA","Registra 5 alimentos",()=>S.food.length>=5,"AGUA Y COMIDA"],
+["f10","GOURMET ZOMBI","Registra 10 alimentos",()=>S.food.length>=10,"AGUA Y COMIDA"],
+["food","DESPENSA LLENA","3 días de comida",()=>food().d>=3,"AGUA Y COMIDA"],
+["fd7","SEMANA DE FESTÍN","7 días de comida",()=>food().d>=7,"AGUA Y COMIDA"],
+["fd14","QUINCENA DE FESTÍN","14 días de comida",()=>food().d>=14,"AGUA Y COMIDA"],
+["fd30","DESPENSA DE LARGO PLAZO","30 días de comida",()=>food().d>=30,"AGUA Y COMIDA"],
+["kc1","DIEZ MIL CALORÍAS","Acumula 10.000 kcal",()=>food().kc>=1e4,"AGUA Y COMIDA"],
+["kc2","CIEN MIL CALORÍAS","Acumula 100.000 kcal",()=>food().kc>=1e5,"AGUA Y COMIDA"],
+["b1","PRIMEROS AUXILIOS","Marca 1 objeto del botiquín",()=>nbk()>=1,"BOTIQUÍN"],
+["b5","CURITA","Marca 5 objetos del botiquín",()=>nbk()>=5,"BOTIQUÍN"],
+["b10","ENFERMERO","Marca 10 objetos del botiquín",()=>nbk()>=10,"BOTIQUÍN"],
+["b50","MEDIO BOTIQUÍN","Botiquín al 50%",()=>bpc()>=50,"BOTIQUÍN"],
+["med","MÉDICO DE CAMPO","Botiquín al 100%",()=>bpc()>=100,"BOTIQUÍN"],
+["m1","MEDICADO","Registra 1 medicación",()=>S.med.length>=1,"BOTIQUÍN"],
+["m3","FARMACIA CASERA","Registra 3 medicaciones",()=>S.med.length>=3,"BOTIQUÍN"],
+["m6","BOTICARIO","Registra 6 medicaciones",()=>S.med.length>=6,"BOTIQUÍN"],
+["d3","FECHAS CONTROLADAS","Anota 3 caducidades",()=>nbx().length>=3,"BOTIQUÍN"],
+["dok","SIN CADUCAR","3 caducidades anotadas y ninguna vencida",()=>nbx().length>=3&&nbx().every(d=>d>=dT()),"BOTIQUÍN"],
+["pk1","PRIMER PASO","Mete tu primer objeto en la mochila",()=>nplaced()>=1,"MOCHILA"],
+["pk5","MOCHILA EN MARCHA","Mete 5 objetos en la mochila",()=>nplaced()>=5,"MOCHILA"],
+["pk10","CARGADO","Mete 10 objetos en la mochila",()=>nplaced()>=10,"MOCHILA"],
+["pk50","A MEDIAS","Mochila de evacuación al 50%",()=>bagPct()>=50,"MOCHILA"],
+["pk100","MOCHILA LISTA","Mochila de evacuación al 100%",()=>bagPct()>=100,"MOCHILA"],
+["pkall","TODO DENTRO","Todos los objetos de la mochila, en su sitio",()=>bagAll(),"MOCHILA"],
+["tetris","ARTE DEL EMPAQUE","Toda la mochila de evacuación en 40 L o menos",()=>bagAll()&&S.pk.L<=40,"MOCHILA"],
+["pk30","ULTRALIGERO","Toda la mochila de evacuación en 30 L o menos",()=>bagAll()&&S.pk.L<=30,"MOCHILA"],
+["pk20","MAESTRO DEL TETRIS","Toda la mochila de evacuación en 20 L o menos",()=>bagAll()&&S.pk.L<=20,"MOCHILA"],
+["slots","SIN HUECOS","Llena todos los slots de la mochila",()=>{const q=window.PK;if(!q)return false;const u=items("e").filter(x=>S.pk.pl[x.key]).reduce((a,x)=>{const d=q.dm(x);return a+d[0]*d[1]},0);return u>=q.C*q.R()},"MOCHILA"],
+["l20","MINIMALISTA","Elige la mochila de 20 L",()=>S.pk.L==20,"MOCHILA"],
+["l90","MULA DE CARGA","Elige la mochila de 90 L",()=>S.pk.L==90,"MOCHILA"],
+["ro1","GIRANDO PIEZAS","Rota un objeto en la mochila",()=>sg("ro")>=1,"MOCHILA"],
+["ro20","ROMPECABEZAS","Rota 20 veces",()=>sg("ro")>=20,"MOCHILA"],
+["au1","AUTOMÁTICO","Usa el auto-ordenar",()=>sg("au")>=1,"MOCHILA"],
+["dr10","TRANSPORTISTA","Coloca 10 veces objetos arrastrándolos",()=>sg("dr")>=10,"MOCHILA"],
+["dr50","MANO RÁPIDA","Coloca 50 veces objetos arrastrándolos",()=>sg("dr")>=50,"MOCHILA"],
+["ca1","UNO A UNO","Ajusta cuántas unidades llevas de un objeto",()=>sg("ca")>=1,"MOCHILA"],
+["ca25","CONTABLE","Ajusta unidades 25 veces",()=>sg("ca")>=25,"MOCHILA"],
+["sq1","NO ESTÁS SOLO","Recluta a 1 superviviente",()=>S.sq.length>=1,"ESCUADRÓN"],
+["sq3","BANDA","Recluta a 3 supervivientes",()=>S.sq.length>=3,"ESCUADRÓN"],
+["sqf","ESCUADRÓN COMPLETO","Recluta a todo tu grupo",()=>S.p>0&&S.sq.length>=S.p,"ESCUADRÓN"],
+["sqr3","ROLES VARIADOS","3 roles distintos en tu escuadrón",()=>new Set(S.sq.map(m=>m.r)).size>=3,"ESCUADRÓN"],
+["sqr6","EQUIPO DE ENSUEÑO","Los 6 roles cubiertos",()=>ROLES.every(r=>S.sq.some(m=>m.r==r)),"ESCUADRÓN"],
+["pet","AMIGO PELUDO","Cuenta con una mascota y su comida",()=>hasPet(),"ESCUADRÓN"],
+["sm1","PRIMER SIMULACRO","Lanza un simulacro de brote",()=>(S.sn||0)>=1,"SIMULACROS"],
+["sm5","ENTRENADO","Lanza 5 simulacros",()=>(S.sn||0)>=5,"SIMULACROS"],
+["sm20","VETERANO DE GUERRA","Lanza 20 simulacros",()=>(S.sn||0)>=20,"SIMULACROS"],
+["sw1","SIN BAJAS","Supera un simulacro sin fallos",()=>(S.sw||0)>=1,"SIMULACROS"],
+["sw5","IMPECABLE","Supera 5 simulacros sin fallos",()=>(S.sw||0)>=5,"SIMULACROS"],
+...[2,3,4,5,6,7].map(n=>["lv"+n,"RANGO: "+RN0[n-1],"Alcanza el nivel "+n,()=>(S.lv||0)>=n,"NIVEL"]),
+["lv10","MÁS ALLÁ DE LA LEYENDA","Alcanza el nivel 10",()=>(S.lv||0)>=10,"NIVEL"],
+["dd3","CONSTANTE","Entra en 3 días distintos",()=>ndays()>=3,"CONSTANCIA"],
+["dd7","UNA SEMANA VIVO","Entra en 7 días distintos",()=>ndays()>=7,"CONSTANCIA"],
+["dd14","FIEL AL REFUGIO","Entra en 14 días distintos",()=>ndays()>=14,"CONSTANCIA"],
+["dd30","SUPERVIVIENTE DEL MES","Entra en 30 días distintos",()=>ndays()>=30,"CONSTANCIA"],
+["tabs","EXPLORADOR","Visita todas las pestañas",()=>Object.keys(S.vt||{}).length>=6,"CONSTANCIA"],
+["scs","CUATRO RINCONES","Prueba los 4 escenarios",()=>Object.keys(S.vs||{}).length>=4,"CONSTANCIA"],
+["pl4","FAMILIA NUMEROSA","Planifica para 4 o más personas",()=>S.p>=4,"CONSTANCIA"],
+["pl6","GRAN GRUPO","Planifica para 6 o más personas",()=>S.p>=6,"CONSTANCIA"],
+["dy14","PLANIFICADOR","Planifica 14 días o más de autonomía",()=>S.days>=14,"CONSTANCIA"],
+["dy30","A LARGO PLAZO","Planifica 30 días o más de autonomía",()=>S.days>=30,"CONSTANCIA"],
+["mus","BANDA SONORA","Activa la música",()=>S.mu===true,"CONSTANCIA"],
+["nit","VIGILIA NOCTURNA","Activa el modo noche",()=>!!S.night,"CONSTANCIA"],
+["tr10","COLECCIONISTA","Desbloquea 10 trofeos",()=>nach()>=10,"MAESTRÍA"],
+["tr25","CAZATROFEOS","Desbloquea 25 trofeos",()=>nach()>=25,"MAESTRÍA"],
+["tr50","MAESTRO DE LOGROS","Desbloquea 50 trofeos",()=>nach()>=50,"MAESTRÍA"],
+["tr75","LEYENDA VIVIENTE","Desbloquea 75 trofeos",()=>nach()>=75,"MAESTRÍA"],
+["plat","PLATINO","Desbloquea todos los demás trofeos",()=>nach()>=AC.length-1,"MAESTRÍA"]];
 document.body.insertAdjacentHTML("beforeend",'<div id="ach"></div>');
 $("hud").insertAdjacentHTML("beforebegin",'<div class="gmh" id="gm"></div>');
 $("mu").insertAdjacentHTML("beforebegin",'<button id="tro" class="gb" aria-label="Logros">🏆</button>');
@@ -562,12 +673,14 @@ function game(){const f=food(),xp=15*cc()+5*Object.values(S.bk).filter(Boolean).
 m=pairs(x=>x.s.includes(S.sc)).find(x=>!S.chk[x.k]&&x.it.b=="he");
 $("gm").innerHTML=`<div class="lv">NV ${lv}</div><div class="xb"><small>${RN[Math.min(lv-1,6)]} · ${xp}/${b} XP</small><div class="bar"><i style="width:${100*(xp-a)/(b-a)}%"></i></div></div>`+(m?`<div class="ms" data-t="${m.b}"><b>OBJETIVO ▸</b> ${m.it.n} ×${qty(m.it,m.b)} <small>(${m.b=="h"?"INVENTARIO":"MOCHILA"})</small></div>`:`<div class="ms"><b>MISIÓN CUMPLIDA ▸</b> Todos los objetivos esenciales completos</div>`);
 if(S.lv&&lv>S.lv)toast("¡SUBES DE NIVEL!","NV "+lv+" · "+RN[Math.min(lv-1,6)]);S.lv=lv;
-AC.forEach(c=>{if(!S.ach[c[0]]&&c[3]()){S.ach[c[0]]=1;toast("LOGRO DESBLOQUEADO",c[1])}});
+S.vd=S.vd||{};S.vd[dT()]=1;S.vt=S.vt||{};S.vt[S.tab]=1;S.vs=S.vs||{};S.vs[S.sc]=1;
+const nw=[];AC.forEach(c=>{if(!S.ach[c[0]]){let ok=false;try{ok=c[3]()}catch(x){}if(ok){S.ach[c[0]]=1;nw.push(c)}}});
+if(nw.length&&nw.length<=2)nw.forEach(c=>toast("LOGRO DESBLOQUEADO",c[1]));else if(nw.length)toast("¡"+nw.length+" LOGROS DESBLOQUEADOS!",nw.slice(0,3).map(c=>c[1]).join(" · ")+"…");
 if("heb".includes(S.tab)){const L=items(S.tab);document.querySelectorAll("[data-pk],[data-s]").forEach(el=>{const x=L.find(i=>i.key==(el.dataset.pk||el.dataset.s));if(x)el.dataset.r=x.it.b||""})}
 sv()}
 const _r2=render;render=function(){_r2();game()};
 document.addEventListener("click",e=>{const m=e.target.closest(".ms[data-t]");if(m){S.tab=m.dataset.t;render();scrollTo({top:0,behavior:"smooth"})}
-if(e.target.id=="tro"){const n=AC.filter(c=>S.ach[c[0]]).length;$("sheet").innerHTML=`<div class="sh"><h2>🏆 Logros · ${n}/${AC.length}</h2>`+AC.map(c=>`<div class="tr ${S.ach[c[0]]?"u":""}"><em>${S.ach[c[0]]?"🏆":"🔒"}</em><div><b>${c[1]}</b><span>${c[2]}</span></div></div>`).join("")+`<button id="gc" style="width:100%;margin-top:12px">Cerrar</button></div>`;$("sheet").classList.add("on")}});
+if(e.target.id=="tro"){const n=AC.filter(c=>S.ach[c[0]]).length;let cat="";$("sheet").innerHTML=`<div class="sh"><h2>🏆 Logros · ${n}/${AC.length}</h2><div class="bar"><i style="width:${100*n/AC.length}%"></i></div>`+AC.map(c=>{let h="";if(c[4]!=cat){cat=c[4];const t=AC.filter(x=>x[4]==cat),u=t.filter(x=>S.ach[x[0]]).length;h=`<h3 class="trc">${cat} · ${u}/${t.length}</h3>`}return h+`<div class="tr ${S.ach[c[0]]?"u":""}"><em>${S.ach[c[0]]?"🏆":"🔒"}</em><div><b>${c[1]}</b><span>${c[2]}</span></div></div>`}).join("")+`<button id="gc" style="width:100%;margin-top:12px">Cerrar</button></div>`;$("sheet").classList.add("on")}});
 render();
 })();
 (()=>{
@@ -588,10 +701,10 @@ const _r4=render;render=function(){sync();_r4();fprev()};render();
 })();
 
 (()=>{
-let DLG=false,dTab=null;
+let DLG=false,dTab=null,oT=0;window.openDlg=()=>{DLG=true;dTab=S.tab;oT=Date.now()};
 const o=$("dlg");
 function dlg(){
- const d=document.querySelector("#v .det"),use=S.tab=="h"||S.tab=="b";
+ const d=document.querySelector("#v .det"),use=S.tab=="h"||S.tab=="b"||S.tab=="e";
  if(DLG&&(!use||S.tab!=dTab))DLG=false;
  if(use&&d){
   if(DLG){const b=document.createElement("button");b.className="dc";b.dataset.dc="1";b.setAttribute("aria-label","Cerrar");b.textContent="✕";d.prepend(b);o.replaceChildren(d)}
@@ -605,7 +718,7 @@ document.addEventListener("click",e=>{
  if((S.tab=="h"||S.tab=="b")&&e.target.closest("[data-s]")){DLG=true;dTab=S.tab}
 },true);
 document.addEventListener("click",e=>{
- if(e.target.id=="dlg"||e.target.closest("[data-dc]")){DLG=false;dlg()}
+ if((e.target.id=="dlg"&&Date.now()-oT>450)||e.target.closest("[data-dc]")){DLG=false;dlg()}
 });
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&DLG){DLG=false;dlg()}});
 const _r5=render;render=function(){_r5();dlg()};
@@ -656,7 +769,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-zadd],[dat
 if(d.zadd){const n=$("zn").value.trim();if(n){S.sq.push({n,r:$("zr").value});bp(660);render()}}
 if(d.zdel!==undefined){S.sq.splice(+d.zdel,1);render()}
 if(d.zsim){const r=EV.slice().sort(()=>Math.random()-.5).slice(0,3).map(x=>{const o=x[2]();return[x[0]+" · "+x[1],o[0],o[1]]}),ok=r.filter(x=>x[1]).length;
-S.sim={r,v:ok==3?"SIMULACRO SUPERADO: tu equipo sale ileso.":ok==2?"SOBREVIVES CON BAJAS: refuerza lo que ha fallado.":"EL BROTE TE ALCANZA: completa tu equipo y repite."};bp(ok==3?880:300);render()}
+S.sn=(S.sn||0)+1;if(ok==3)S.sw=(S.sw||0)+1;S.sim={r,v:ok==3?"SIMULACRO SUPERADO: tu equipo sale ileso.":ok==2?"SOBREVIVES CON BAJAS: refuerza lo que ha fallado.":"EL BROTE TE ALCANZA: completa tu equipo y repite."};bp(ok==3?880:300);render()}
 if(d.zcp){(navigator.clipboard?navigator.clipboard.writeText(txt()):Promise.reject()).then(()=>{b.textContent="¡COPIADO!"}).catch(()=>{b.textContent="NO SE PUDO"})}
 if(d.zsh){navigator.share?navigator.share({title:"Lista de equipo",text:txt()}).catch(()=>{}):b.previousElementSibling.click()}
 if(d.zpr)prn();
@@ -664,7 +777,7 @@ if(d.zex){const a=document.createElement("a");a.href=URL.createObjectURL(new Blo
 if(d.zimp)$("zf").click();
 if(d.zrst&&confirm("¿Borrar todos tus datos de este dispositivo?")){try{localStorage.removeItem("tps")}catch(x){}location.reload()}
 if(d.zpre){const q=d.zpre.split(",");S.p=+q[0];S.days=+q[1];S.sc=q[2];closeG();render()}});
-document.addEventListener("change",e=>{if(e.target.id!="zf"||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const n=JSON.parse(r.result);for(const k in S)delete S[k];Object.assign(S,n);S.inv=S.inv||{};S.chk=S.chk||{};S.bk=S.bk||{};S.bx=S.bx||{};S.med=S.med||[];S.food=S.food||[];S.ach=S.ach||{};S.sq=S.sq||[];S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};render()}catch(x){alert("Archivo no válido")}};r.readAsText(e.target.files[0])});
+document.addEventListener("change",e=>{if(e.target.id!="zf"||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const n=JSON.parse(r.result);for(const k in S)delete S[k];Object.assign(S,n);S.inv=S.inv||{};S.chk=S.chk||{};S.bk=S.bk||{};S.bx=S.bx||{};S.med=S.med||[];S.food=S.food||[];S.ach=S.ach||{};S.sq=S.sq||[];S.pk=S.pk||{};S.pk.L=S.pk.L||50;S.pk.pl=S.pk.pl||{};S.pk.rt=S.pk.rt||{};S.pk.n=S.pk.n||{};render()}catch(x){alert("Archivo no válido")}};r.readAsText(e.target.files[0])});
 const _r6=render;render=function(){_r6();if(S.tab=="k")ficha()};
 render();
 if(!S.ob){S.ob=1;sv();setTimeout(openOB,900)}
@@ -841,4 +954,63 @@ function night(){document.body.classList.toggle("night",!!S.night);$("nm").textC
 document.addEventListener("click",e=>{const b=e.target.closest("[data-lg],#nm");if(!b)return;if(b.id=="nm"){S.night=!S.night;night()}else{S.lang=b.dataset.lg;run()}sv()});
 night();run();
 })();
-</script></body></html>
+</script><script>
+(()=>{
+const T=s=>s==null?"":String(s),q=s=>T(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gp=()=>{const g=S.gp=S.gp||{};g.m=g.m||[];return g};
+const FLD=[["name","Nombre del grupo"],["lead","Responsable / quien decide"],["meet1","Punto de encuentro 1 (cerca de casa)",1],["meet2","Punto de encuentro 2 (alternativo)",1],["meet3","Punto de encuentro lejano (fuera de la zona)",1],["route","Rutas de salida",1],["sig","Señal o contraseña del grupo"],["wait","Tiempo máximo de espera en cada punto"],["water","Puntos de agua conocidos",1],["store","Dónde está el material (mochilas, botiquín)",1],["far","Contacto fuera de la zona (nombre y teléfono)"],["rules","Qué hacer si nos separamos",1]];
+const PA=[["Antes de actuar",["Protege: comprueba que la zona es segura para ti y para el herido.","Avisa: llama al 112 y di dónde estás, qué ha pasado y cuántos heridos hay.","Socorre: háblale y sacúdele suavemente los hombros. Si no responde y no respira con normalidad, empieza la RCP."]],
+["RCP en adultos",["Pide que traigan un desfibrilador (DEA) y llama al 112.","Manos entrelazadas en el centro del pecho, brazos rectos, comprime 5-6 cm a un ritmo de 100-120 por minuto y deja que el pecho vuelva a subir.","Ciclos de 30 compresiones y 2 insuflaciones. Si no sabes o no quieres insuflar, haz solo compresiones sin parar.","Usa el DEA en cuanto llegue y sigue sus indicaciones. No pares hasta que respire, llegue ayuda o te agotes."]],
+["RCP en niños y lactantes",["Empieza con 5 insuflaciones y sigue con ciclos de 30:2.","En lactantes comprime con dos dedos, hundiendo un tercio del tórax. Si estás solo, llama al 112 tras 1 minuto de RCP."]],
+["Atragantamiento",["Si tose con fuerza, anímale a seguir tosiendo y no le golpees.","Si no puede toser, hablar ni respirar: 5 golpes secos en la espalda entre los omóplatos y 5 compresiones abdominales (Heimlich). Alterna hasta que expulse el objeto.","Embarazadas y personas obesas: compresiones en el centro del pecho. Lactantes: 5 golpes en la espalda y 5 compresiones en el pecho, nunca Heimlich.","Si pierde la consciencia, empieza la RCP y llama al 112."]],
+["Hemorragias",["Presión directa y firme con gasa o tela limpia. No la retires: si se empapa, añade más encima.","Eleva la extremidad si es posible y haz un vendaje compresivo.","Torniquete solo en brazos o piernas cuando la presión no basta: 5-7 cm por encima de la herida, aprieta hasta que pare, anota la hora y no lo aflojes."]],
+["Heridas y mordeduras",["Lava con agua y jabón abundante al menos 5 minutos, seca, aplica antiséptico y cubre.","Toda mordedura (persona o animal) debe verla un médico por riesgo de infección. Comprueba que tienes al día la vacuna del tétanos.","Vigila enrojecimiento, hinchazón, pus o fiebre en los días siguientes."]],
+["Quemaduras",["Enfría con agua corriente fresca (no helada) 10-20 minutos y retira anillos y ropa no pegada.","No uses hielo, cremas ni aceites y no revientes las ampollas. Cubre con gasa estéril o film sin apretar.","Urgente si es extensa, profunda, en cara, manos o genitales, o eléctrica o química."]],
+["Fracturas y esguinces",["Inmoviliza en la postura en que lo encuentres, sin intentar recolocar el hueso.","Férula improvisada que incluya la articulación de arriba y la de abajo. Frío envuelto en tela 20 minutos.","Revisa que los dedos siguen calientes y con sensibilidad. Ante sospecha de lesión de columna, no muevas a la persona."]],
+["Shock",["Piel pálida y fría, sudor, pulso rápido, confusión. Llama al 112.","Tumba a la persona, eleva las piernas si no hay lesión de cabeza, columna o piernas, abrígala y no le des de beber."]],
+["Calor y frío",["Golpe de calor: sombra, ropa fuera, enfriar con agua y ventilar, sorbos de agua si está consciente y 112.","Hipotermia: quita la ropa húmeda, abriga con mantas (cabeza incluida), bebidas dulces tibias si está consciente. Muévela con cuidado, no la frotes y no des alcohol."]],
+["Deshidratación y diarrea",["Suero casero: 1 litro de agua potable, 6 cucharaditas rasas de azúcar y media de sal. Beber a sorbos frecuentes.","Si hay vómitos que no cesan, sangre en las heces o confusión, busca ayuda médica."]],
+["Botiquín básico",["Gasas estériles, vendas, esparadrapo, tijeras, pinzas, guantes, mascarillas, suero fisiológico, antiséptico, manta térmica, termómetro, torniquete.","Analgésico habitual y tu medicación personal para al menos 7 días. Revisa caducidades cada mes."]],
+["Llama al 112 si hay",["Inconsciencia, dolor en el pecho, dificultad para respirar, hemorragia grave, convulsiones de más de 5 minutos, quemaduras graves, sospecha de lesión de columna.","Ictus: cara caída, brazo sin fuerza o habla confusa. Cada minuto cuenta."]]];
+const SV=[["La regla de los 3",["Sin aire sobrevives unos 3 minutos, sin refugio frente al frío o calor extremo unas 3 horas, sin agua unos 3 días y sin comida unas 3 semanas. Prioriza en ese orden."]],
+["Mentalidad",["Para, respira y evalúa antes de actuar. Haz un plan sencillo, repártelo en tareas y revísalo cada día.","Descansa, come y bebe aunque no tengas ganas: los errores llegan con el agotamiento."]],
+["Agua",["Calcula 3 litros por persona y día entre beber, cocinar e higiene.","Potabiliza: hierve 1 minuto (3 por encima de 2.000 m), usa pastillas siguiendo al fabricante o un filtro portátil. Si está turbia, filtra antes con una tela.","Lejía sin aditivos: 2 gotas por litro y esperar 30 minutos.","En un corte, aprovecha el depósito del calentador y la cisterna. No bebas agua de mar ni orina."]],
+["Comida",["Reserva raciones que no necesiten cocinar ni nevera y rota por caducidad. Unas 2.000 kcal por persona y día.","Consume primero lo perecedero. No comas plantas ni setas que no conozcas."]],
+["Refugio y temperatura",["Aíslate del suelo, vístete por capas y evita sudar. Una manta térmica pesa poco y ayuda mucho.","Nunca uses hornillos, braseros ni generadores en espacios cerrados: el monóxido de carbono mata sin avisar."]],
+["Luz y fuego",["Linternas y frontales mejor que velas. Lleva pilas de repuesto, mechero y cerillas en bolsa estanca.","Si haces fuego, hazlo en exterior, sobre suelo despejado, sin dejarlo solo y con agua cerca."]],
+["Orientación y evacuación",["Mapa en papel y brújula, con dos rutas de salida desde cada punto.","Sigue las instrucciones de protección civil y no cruces zonas inundadas.","La mochila no debería superar el 20% de tu peso. Calzado cómodo y ya usado."]],
+["Señales y comunicación",["Radio de pilas o manivela para recibir avisos. El 112 funciona aunque no tengas saldo.","Tres pitidos, tres destellos o tres golpes seguidos significan socorro.","Acordad un punto de encuentro y una señal antes de que haga falta."]],
+["Higiene y salud",["Lávate las manos antes de comer y tras ir al baño. Si no hay agua, usa gel hidroalcohólico.","Letrina a más de 30 m de cualquier fuente de agua y basura en bolsas cerradas.","Cura cualquier herida cuanto antes. Ten medicación para al menos 7 días."]],
+["Apagón",["Mantén cerrados nevera y congelador: la nevera aguanta unas 4 horas y el congelador lleno entre 24 y 48.","Desenchufa aparatos sensibles, ten powerbank cargado, efectivo en billetes pequeños y el depósito del coche por encima de la mitad."]],
+["En grupo",["Reparte roles (salud, agua, comida, vigilancia, comunicación) y haced turnos.","Una sola persona decide en caso de duda. Racionad desde el primer día y evitad riesgos innecesarios.","Cumple siempre la normativa local sobre el porte y uso de herramientas."]]];
+const MAN={pa:["Manual de primeros auxilios",PA,"Orientación general. No sustituye a un curso de primeros auxilios ni a los servicios de emergencia: ante una urgencia real llama al 112."],sv:["Manual de supervivencia",SV,"Orientación general basada en recomendaciones habituales de protección civil. En una emergencia real sigue las indicaciones de las autoridades y llama al 112."]};
+function mkpdf(L,title){const W=595,H=842,M=48,cv=document.createElement("canvas").getContext("2d"),ST={t:[20,"bold",28],h:[13,"bold",22],p:[10.5,"",15],l:[10.5,"",15],s:[9,"",13]},pg=[[]];let y=H-M;
+const lat=s=>s.replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/[\u2013\u2014]/g,"-").replace(/[^\x20-\x7E\xA1-\xFF]/g,""),es=s=>s.replace(/[\\()]/g,"\\$&");
+L.forEach(([k,tx])=>{const [sz,w,lh]=ST[k]||ST.p,ind=k=="l"?14:0;tx=lat(T(tx));cv.font=`${w} ${sz}px Helvetica,Arial,sans-serif`;if(k=="h")y-=6;
+const rows=[];let cur="";tx.split(" ").forEach(wd=>{const t=cur?cur+" "+wd:wd;if(cv.measureText(t).width>W-2*M-ind&&cur){rows.push(cur);cur=wd}else cur=t});rows.push(cur);
+rows.forEach((r,i)=>{if(y-lh<M+10){pg.push([]);y=H-M}y-=lh;const c=pg[pg.length-1];if(k=="l"&&i==0)c.push(`BT /F1 ${sz} Tf ${M} ${y} Td (-) Tj ET`);if(r)c.push(`BT /F${w?2:1} ${sz} Tf ${M+ind} ${y} Td (${es(r)}) Tj ET`)})});
+const o=[],kd=[];o[1]="<</Type/Catalog/Pages 2 0 R>>";o[3]="<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>";o[4]="<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold/Encoding/WinAnsiEncoding>>";
+pg.forEach((c,i)=>{c.push(`BT /F1 8 Tf ${M} 24 Td (${es(lat(title))} - ${i+1}/${pg.length}) Tj ET`);const s=c.join("\n"),a=5+2*i;kd.push(a+" 0 R");o[a]=`<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${W} ${H}]/Resources<</Font<</F1 3 0 R/F2 4 0 R>>>>/Contents ${a+1} 0 R>>`;o[a+1]=`<</Length ${s.length}>>\nstream\n${s}\nendstream`});
+o[2]=`<</Type/Pages/Count ${pg.length}/Kids[${kd.join(" ")}]>>`;let out="%PDF-1.4\n";const of=[];for(let i=1;i<o.length;i++){of[i]=out.length;out+=`${i} 0 obj\n${o[i]}\nendobj\n`}
+const xr=out.length;out+=`xref\n0 ${o.length}\n0000000000 65535 f \n`+of.slice(1).map(n=>String(n).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<</Size ${o.length}/Root 1 0 R>>\nstartxref\n${xr}\n%%EOF`;
+const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return new Blob([u],{type:"application/pdf"})}
+async function out(b,name,share){const f=new File([b],name,{type:"application/pdf"});if(share&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:name});return}catch(e){if(e.name=="AbortError")return}}
+const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
+const fd=()=>new Date().toLocaleDateString("es-ES");
+function planPdf(share){const g=gp(),L=[["t","PLAN DE GRUPO"+(g.name?" - "+g.name:"")],["s","Mi Refugio · "+fd()+" · Emergencias: 112"]];
+FLD.forEach(([k,l])=>{L.push(["h",l],["p",g[k]||"(sin rellenar)"])});L.push(["h","Miembros del grupo"]);
+g.m.length?g.m.forEach(m=>L.push(["l",[m.n,m.t,m.r,m.x].filter(Boolean).join(" · ")||"(vacío)"])):L.push(["p","(sin miembros)"]);
+L.push(["p",""],["s","Guarda una copia en papel y otra en el móvil. Todos deben conocer este plan antes de que haga falta."]);out(mkpdf(L,"Plan de grupo"),"plan-de-grupo.pdf",share)}
+function manPdf(k){const [t,S2,n]=MAN[k],L=[["t",t],["s","Mi Refugio · "+fd()]];S2.forEach(([h,a])=>{L.push(["h",h]);a.forEach(x=>L.push(["l",x]))});L.push(["p",""],["s",n]);out(mkpdf(L,t),t.toLowerCase().replace(/ /g,"-")+".pdf")}
+function viewPg(){const g=gp(),f=(k,l,ta)=>`<label style="display:block;margin-top:8px">${l}${ta?`<textarea data-gp="${k}" rows="2" style="width:100%">${q(g[k])}</textarea>`:`<input data-gp="${k}" value="${q(g[k])}" style="width:100%">`}</label>`;
+return `<div class="pn"><h2>PLAN DE GRUPO</h2><small>Rellénalo, descárgalo en PDF y envíalo a todo el grupo.</small>${FLD.map(x=>f(...x)).join("")}</div><div class="pn"><h2>MIEMBROS · ${g.m.length}</h2>${g.m.map((m,i)=>`<div class="it" style="flex-wrap:wrap;gap:6px">${[["n","Nombre"],["t","Teléfono"],["r","Rol"],["x","Alergias, medicación, notas"]].map(([k,p])=>`<input data-gm="${i}.${k}" placeholder="${p}" value="${q(m[k])}" style="flex:1 1 45%;min-width:0">`).join("")}<button data-gx="${i}">✕</button></div>`).join("")}<div class="row" style="margin-top:8px"><button data-ga="1">+ Miembro</button><button data-gi="1">Importar escuadrón</button></div></div><div class="pn"><div class="row"><button data-gpdf="d">⬇ Descargar PDF</button><button data-gpdf="s">📤 Enviar al grupo</button></div><small>«Enviar» abre el menú de tu móvil (WhatsApp, correo...). Si no está disponible, se descarga el PDF.</small></div>`}
+function viewMn(){return Object.keys(MAN).map(k=>{const [t,S2,n]=MAN[k];return `<div class="pn"><h2>${k=="pa"?"🩹":"🏕"} ${t.toUpperCase()}</h2><div class="row"><button data-mpdf="${k}">⬇ Descargar PDF</button></div>${S2.map(([h,a])=>`<details style="margin-top:8px"><summary><b>${h}</b></summary><ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul></details>`).join("")}<small>${n}</small></div>`}).join("")}
+const _r2=render;render=function(){_r2();if(S.tab=="pg"||S.tab=="mn"){$("v").innerHTML=S.tab=="pg"?viewPg():viewMn()}};
+document.addEventListener("input",e=>{const d=e.target.dataset;if(d.gp){gp()[d.gp]=e.target.value;sv()}if(d.gm){const[i,k]=d.gm.split(".");gp().m[i][k]=e.target.value;sv()}});
+document.addEventListener("click",e=>{const d=e.target.dataset;if(d.ga){gp().m.push({});sv();render()}if(d.gx!==undefined&&d.gx!==""){gp().m.splice(+d.gx,1);sv();render()}
+if(d.gi){const g=gp();(S.sq||[]).forEach(s=>{if(!g.m.some(m=>m.n==s.n))g.m.push({n:s.n,r:s.r})});sv();render()}
+if(d.gpdf)planPdf(d.gpdf=="s");if(d.mpdf)manPdf(d.mpdf)});
+render();
+})();
+</script>
+</body></html>
