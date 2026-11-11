@@ -260,6 +260,13 @@ h1{font-size:clamp(20px,7vw,30px);letter-spacing:2px;overflow-wrap:anywhere}
 .slot,.pc,.tp,.use{min-height:44px}
 
 @media(max-width:430px){.hd{flex-wrap:nowrap;gap:6px}.emb{width:38px;height:38px}.hd .gb{padding:4px 0;font-size:16px;width:34px;height:34px;display:grid;place-items:center;line-height:1}h1{font-size:clamp(19px,6vw,24px);letter-spacing:1px}.sb{font-size:11px}.hd>div:not(.emb){flex:1 1 0}}
+
+/* ===== A CONSEGUIR + DESPENSA ===== */
+#tabs button{position:relative;overflow:visible;white-space:normal;line-height:1.05;word-break:keep-all;padding:8px 1px 6px;display:grid;place-items:center}
+@media(max-width:430px){#tabs button{font-size:9.5px}}
+#tabs .bg{position:absolute;top:-9px;right:-1px;background:var(--r);color:#f6eed7;font:10px/1 var(--pf);border-radius:9px;padding:2px 5px;box-shadow:1px 1px 0 #0004}
+.cg .it{flex-wrap:wrap;align-items:center}.cg .qr{flex:0 0 auto}.cg .qr button{min-height:40px;padding:8px 10px}
+.ok{color:#2f5d2a}.zlog{font-size:15px;color:var(--m)}
 </style></head><body><noscript>Esta aplicación necesita JavaScript.</noscript>
 <header class="hd"><div class="emb" id="emb"></div><div><h1>MI REFUGIO</h1><div class="sb">Archivo de campo · Cómo sobrevivir a los muertos vivientes</div></div><button id="gd" class="gb" aria-label="Manual">📘</button></header>
 <div class="tick" id="tk"></div>
@@ -338,7 +345,7 @@ function food(){const kc=S.food.reduce((s,f)=>s+f.q*f.k,0);return{kc,d:kc/(2000*
 function render(){
 document.body.dataset.sc=S.sc;$("p").value=S.p;$("pets").value=S.pets;$("days").value=S.days;$("sc").value=S.sc;
 const RG=[["TODO",""],...Object.entries(SC).map(([c,l])=>[l,c])];if(!$("rings").children.length)$("rings").innerHTML=RG.map(r=>ring(r[0],0)).join("");setTimeout(()=>[...$("rings").children].forEach((el,i)=>{const p=pct(x=>x.s.includes(RG[i][1])),rn=el.firstChild;rn.style.setProperty("--p",p);rn.style.setProperty("--c",col(p));rn.firstChild.textContent=p+"%"}),40);
-$("tabs").innerHTML=[["h","ALMACÉN"],["e","MOCHILA"],["b","BOTIQUÍN"],["f","DESPENSA"],["k","FICHA"]].map(t=>`<button data-t="${t[0]}" class="${S.tab==t[0]?"on":""}">${t[1]}</button>`).join("");
+$("tabs").innerHTML=[["h","ALMACÉN"],["e","MOCHILA"],["b","BOTIQUÍN"],["f","DESPENSA"],["g","A CONSEGUIR"],["k","FICHA"]].map(t=>`<button data-t="${t[0]}" class="${S.tab==t[0]?"on":""}">${t[1]}</button>`).join("");
 const v=$("v");if(S.tab=="h"||S.tab=="e"||S.tab=="b"){v.innerHTML=(S.tab=="b"?"":cn())+grid(S.tab);sv();return}
 if(S.tab=="h"||S.tab=="e"){const L=pairs(x=>x.s.includes(S.sc)&&x.b.includes(S.tab)).filter(x=>x.b==S.tab);const p=pct(x=>x.s.includes(S.sc),S.tab);
 v.innerHTML=cn()+`<div class="pn"><h2>${S.tab=="h"?"MOCHILA DE CASA · "+S.days+" días":"MOCHILA DE EVACUACIÓN · 72 h"} · ${SC[S.sc]} · ${p}%</h2><div class="bar"><i style="width:${p}%"></i></div>`+L.map(x=>{const it=x.it,u=S.chk[x.k];return `<label class="it ${u?"d":""}" style="flex-direction:row;color:var(--t);font-size:15px"><input type="checkbox" data-k="${x.k}" ${u?"checked":""}><span><span class="nm">${it.n}</span> <span class="q">× ${qty(it,x.b)} ${it.u}</span><br>${it.r.split(" ").map(r=>r=="-"?'<span class="bd x">EXTRA</span>':`<span class="bd">${r}</span>`).join("")}${it.j?`<span class="j">${it.j}</span>`:""}</span></label>`}).join("")+"</div>"}
@@ -657,5 +664,41 @@ const LG={"p": ["Política de privacidad", ["<b>Titular:</b> Octopalomo · frshf
 document.addEventListener("click",e=>{const b=e.target.closest("[data-zlg]");if(!b)return;const g=LG[b.dataset.zlg];$("sheet").innerHTML='<div class="sh"><h2>'+g[0]+'</h2>'+g[1].map(x=>"<p>"+x+"</p>").join("")+'<button id="gc" style="width:100%">Cerrar</button></div>';$("sheet").classList.add("on")});
 document.querySelectorAll(".pn").forEach(p=>{if(/Obra de ficción/.test(p.textContent)&&!p.querySelector("[data-zlg]")&&p.children.length==1&&p.firstElementChild.tagName=="SMALL")p.insertAdjacentHTML("beforeend",'<div class="zr"><button data-zlg="p">PRIVACIDAD</button><button data-zlg="t">AVISO LEGAL</button></div>')});
 if("serviceWorker"in navigator&&location.protocol.indexOf("http")==0)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+
+(()=>{
+S.cons=S.cons||[];
+const st=u=>u=="g"?100:(u=="kg"||u=="L")?.5:1,N=v=>+(+v).toFixed(2);
+function pend(){
+ const A=items("h").filter(x=>iv(x.i)<x.q-1e-9).map(x=>({i:x.i,n:x.it.n,u:x.it.u,need:x.q,have:iv(x.i),ess:x.it.b=="he",w:isW(x.it)}));
+ A.sort((a,b)=>b.ess-a.ess);
+ const B=BO.map((it,i)=>({it,i})).filter(o=>!S.bk[o.i]);
+ const F=S.food.map((x,i)=>({x,i})).filter(o=>o.x.q<=0||(o.x.e&&o.x.e<dT()));
+ return{A,B,F,t:A.length+B.length+F.length}}
+const row=(a,t,btn)=>`<div class="it"><span style="flex:1">${a}</span><div class="qr">${btn}</div></div>`;
+function conseguir(){
+ const p=pend(),L=items("h"),pc=L.length?Math.round(100*L.reduce((s,x)=>s+Math.min(1,iv(x.i)/x.q),0)/L.length):100;
+ let h=`<div class="pn cg"><h2>A CONSEGUIR · ${p.t} pendientes</h2><div class="bar"><i style="width:${pc}%"></i></div><small>Almacén completado al ${pc}%. Lo que añadas en ALMACÉN desaparece de aquí.</small></div>`;
+ if(!p.t)return h+`<div class="pn"><b class="ok">✓ Todo conseguido para este plan.</b><br><small>Si cambias de plan, de personas o de días, la lista se recalcula.</small></div>`;
+ const g=(t,x)=>x.length?`<div class="pn cg"><h2>${t}</h2>`+x.join("")+"</div>":"";
+ const ia=a=>row(`<b class="nm">${a.n}</b><br><span class="q">Faltan ${N(a.need-a.have)} ${a.u}</span> <small>(tienes ${N(a.have)} de ${a.need})</small>`,0,`<button data-zga="${a.i}" data-zs="${a.w?1.5:1}">+${a.w?"1,5":1}</button><button data-zgc="${a.i}">COMPLETAR</button>`);
+ h+=g("ESENCIALES",p.A.filter(a=>a.ess).map(ia))+g("COMPLEMENTARIOS",p.A.filter(a=>!a.ess).map(ia));
+ h+=g("BOTIQUÍN",p.B.map(o=>row(`<b class="nm">${o.it.n}</b><br><span class="q">× ${qty(o.it,"h")} ${o.it.u}</span>`,0,`<button data-zgb="${o.i}">LO TENGO</button>`)));
+ h+=g("DESPENSA",p.F.map(o=>row(`<b class="nm">${esc(o.x.n)}</b><br><span class="q">${o.x.q<=0?"Agotado: reponer":(o.x.e<dT()?"Caducado: sustituir":"Caduca pronto")}</span>`,0,`<button data-t="f">IR A DESPENSA</button>`)));
+ $("v").innerHTML=h}
+function desp(){
+ const ps=$("v").querySelectorAll(".pn"),l=ps[ps.length-1];if(!l)return;
+ let h=S.food.length?S.food.map((x,i)=>`<div class="it" style="flex-wrap:wrap"><span style="flex:1 1 100%"><b>${esc(x.n)}</b> · <span class="q">${N(x.q)} ${x.u||"ud"}</span>${x.q<=0?' <b style="color:var(--r)">AGOTADO</b>':""}<br><small>${Math.round(x.q*x.k)} kcal${x.e?" · cad. "+x.e:""}</small>${x.e&&x.e<dS()?'<span class="j" style="border-color:var(--r);color:var(--r)">'+(x.e<dT()?"CADUCADO":"Caduca en menos de 30 días")+"</span>":""}</span><div class="qr" style="flex:1 1 100%;justify-content:flex-start"><input type="number" min="0" step="any" inputmode="decimal" value="${st(x.u)}" data-za="${i}" aria-label="Cantidad"><button data-zc="${i}">CONSUMIR</button><button data-zr="${i}">+ REPONER</button><button data-x="${i}" aria-label="Eliminar">✕</button></div></div>`).join(""):"<small>Aún no has registrado alimentos.</small>";
+ if(S.cons.length)h+='<h2 style="margin-top:14px">CONSUMO RECIENTE</h2>'+S.cons.slice(-6).reverse().map(c=>`<div class="zlog">${new Date(c.t).toLocaleDateString("es-ES",{day:"2-digit",month:"short"})} · ${esc(c.n)} −${N(c.a)} ${c.u}</div>`).join("");
+ l.innerHTML=h}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-zc],[data-zr],[data-zga],[data-zgc],[data-zgb]");if(!b)return;const d=b.dataset;
+ if(d.zc!==undefined||d.zr!==undefined){const i=+(d.zc!==undefined?d.zc:d.zr),x=S.food[i],inp=document.querySelector('[data-za="'+i+'"]'),a=+(inp&&inp.value)||0;if(!x||!(a>0))return;
+  if(d.zc!==undefined){const u=Math.min(a,x.q);if(u<=0)return;x.q=N(x.q-u);S.cons.push({n:x.n,a:u,u:x.u||"ud",t:Date.now()});if(S.cons.length>40)S.cons.shift();bp(300)}else{x.q=N(x.q+a);bp(660)}
+  render();return}
+ if(d.zga!==undefined){setIv(+d.zga,iv(+d.zga)+(+b.dataset.zs||1));bp(660);render()}
+ if(d.zgc!==undefined){const f=items("h").find(x=>x.i==+d.zgc);if(f){setIv(f.i,f.q);bp(880)}render()}
+ if(d.zgb!==undefined){S.bk[d.zgb]=true;bp(880);render()}});
+const _r7=render;render=function(){_r7();if(S.tab=="f")desp();if(S.tab=="g")conseguir();const t=pend().t,b=document.querySelector('#tabs [data-t="g"]');if(b&&t)b.insertAdjacentHTML("beforeend",'<span class="bg">'+t+"</span>")};
+render();
 })();
 </script></body></html>
