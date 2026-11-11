@@ -336,7 +336,7 @@ Semillas y herramientas de huerto|set|hh|1|h|XZ|MAN|Para el largo plazo: cultiva
 Depósito de agua de lluvia|ud|hh|1|h|XZ|-|
 Sedal y anzuelos|set|hh|1|h|XZ|-|
 Hacha de campo|ud|pp|1|he|ANXZ|MAN|Herramienta de corte. Cumple siempre la normativa local sobre su porte y uso.
-Pala de zapador|ud|hh|1|he|NXZ|-|Cava, despeja el paso y sirve para improvisar un refugio.`.split("\n").map(l=>{const a=l.split("|");return{n:a[0],u:a[1],t:a[2],k:+a[3],b:a[4],s:a[5],r:a[6],j:a[7]}});
+Pala de zapador (trinchera)|ud|hh|1|he|ANXZ|-|Cava, despeja el paso y sirve para improvisar un refugio.`.split("\n").map(l=>{const a=l.split("|");return{n:a[0],u:a[1],t:a[2],k:+a[3],b:a[4],s:a[5],r:a[6],j:a[7]}});
 const SC={A:"🏚 Atrincherado",N:"🏃 En fuga",X:"🏕 Refugio remoto",Z:"🏰 Fortaleza"};
 let S={p:2,pets:0,days:7,sc:"A",chk:{},food:[],water:0,tab:"h"};
 try{Object.assign(S,JSON.parse(localStorage.getItem("tps")||"{}"))}catch(e){}
